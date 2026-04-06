@@ -42,5 +42,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "es-abstract": "^1.24.1"
+  },
+  "overrides": {
+    "eslint-config-react-app": {
+      "eslint-plugin-react": {
+        "es-abstract": "^1.24.1",
+        "string.prototype.repeat": "^1.0.0"
+      }
+    },
+    "es-abstract": "^1.24.1"
   }
 }
