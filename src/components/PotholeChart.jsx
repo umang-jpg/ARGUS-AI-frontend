@@ -3,14 +3,14 @@ import { useEffect, useRef, useState } from "react";
 const DATA_2022 = [
   { state: "Uttar Pradesh", fatalities: 1030, accent: "#ED4B1E" },
   { state: "Madhya Pradesh", fatalities: 199, accent: "#FF8C42" },
-  { state: "Tamil Nadu",     fatalities: 107, accent: "#FFC857" },
-  { state: "Assam",          fatalities: 117, accent: "#C084FC" },
-  { state: "Odisha",         fatalities: 69,  accent: "#60A5FA" },
-  { state: "Punjab",         fatalities: 60,  accent: "#34D399" },
-  { state: "Rajasthan",      fatalities: 51,  accent: "#F472B6" },
-  { state: "Telangana",      fatalities: 40,  accent: "#A78BFA" },
-  { state: "Haryana",        fatalities: 47,  accent: "#2DD4BF" },
-  { state: "Others",         fatalities: 136, accent: "#6B7280" },
+  { state: "Tamil Nadu", fatalities: 107, accent: "#FFC857" },
+  { state: "Assam", fatalities: 117, accent: "#C084FC" },
+  { state: "Odisha", fatalities: 69, accent: "#60A5FA" },
+  { state: "Punjab", fatalities: 60, accent: "#34D399" },
+  { state: "Rajasthan", fatalities: 51, accent: "#F472B6" },
+  { state: "Telangana", fatalities: 40, accent: "#A78BFA" },
+  { state: "Haryana", fatalities: 47, accent: "#2DD4BF" },
+  { state: "Others", fatalities: 136, accent: "#6B7280" },
 ];
 
 const TOTAL_2022 = 1856;
@@ -22,17 +22,12 @@ function polarToCartesian(cx, cy, r, angleDeg) {
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
-function describeArc(cx, cy, r, startAngle, endAngle) {
-  const s = polarToCartesian(cx, cy, r, startAngle);
-  const e = polarToCartesian(cx, cy, r, endAngle);
-  const large = endAngle - startAngle > 180 ? 1 : 0;
-  return `M ${cx} ${cy} L ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y} Z`;
-}
+
 
 export default function PotholeChart() {
-  const [progress, setProgress]   = useState(0);
-  const [hovered,  setHovered]    = useState(null);
-  const [visible,  setVisible]    = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [hovered, setHovered] = useState(null);
+  const [visible, setVisible] = useState(false);
   const rafRef = useRef(null);
   const startRef = useRef(null);
   const containerRef = useRef(null);
@@ -49,7 +44,7 @@ export default function PotholeChart() {
   useEffect(() => {
     if (!visible) return;
     const DURATION = 1400;
-    function ease(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+    function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function step(ts) {
       if (!startRef.current) startRef.current = ts;
       const elapsed = ts - startRef.current;
@@ -68,12 +63,12 @@ export default function PotholeChart() {
   const slices = DATA_2022.map((d, i) => {
     const slice = (d.fatalities / total) * 360 * progress;
     const start = cumAngle;
-    const end   = cumAngle + slice;
-    cumAngle    = end;
-    const mid   = (start + end) / 2;
+    const end = cumAngle + slice;
+    cumAngle = end;
+    const mid = (start + end) / 2;
     const isHov = hovered === i;
     const scale = isHov ? 1.05 : 1;
-    const p     = polarToCartesian(CX, CY, R * 0.65, mid);
+    const p = polarToCartesian(CX, CY, R * 0.65, mid);
     return { ...d, start, end, mid, isHov, scale, labelX: p.x, labelY: p.y, i };
   });
 
@@ -124,14 +119,14 @@ export default function PotholeChart() {
           <svg width="320" height="320" viewBox="0 0 320 320">
             <defs>
               <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
             </defs>
 
             {slices.map((s) => {
               if (s.end <= s.start) return null;
-              const path = describeArc(CX, CY, R, s.start, s.end);
+
               // inner cutout
               const si = polarToCartesian(CX, CY, INNER_R, s.start);
               const ei = polarToCartesian(CX, CY, INNER_R, s.end);
