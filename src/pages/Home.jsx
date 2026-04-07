@@ -6,7 +6,7 @@ import './Home.css';
 const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 0 }) => {
   const [count, setCount] = useState(0);
   const countRef = useRef(null);
-  const observerRef = useRef(null);
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,9 +42,9 @@ const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 
 
   return (
     <span ref={countRef}>
-      {count.toLocaleString(undefined, { 
-        minimumFractionDigits: decimals, 
-        maximumFractionDigits: decimals 
+      {count.toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
       })}
       {suffix}
     </span>

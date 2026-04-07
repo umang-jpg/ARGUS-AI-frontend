@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, Marker } from 'react-leaflet'
 import supabase from '../supabase'
 import 'leaflet/dist/leaflet.css'
@@ -188,14 +188,14 @@ export default function MapAndRoute() {
               <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{destination || 'Mumbai'}</span>
               <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>{new Date().toLocaleDateString('en-US', { weekday: 'long', hour: 'numeric', minute: 'numeric' })}</span>
             </div>
-            
+
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px', margin: '15px 0' }}>
               <span style={{ fontSize: '3rem', fontWeight: '300', color: 'white' }}>{weather.temp}</span>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                 <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#ffce44' }}>
-                   {weather.condition.includes('Rain') ? 'rainy' : weather.condition.includes('Cloud') ? 'cloud' : 'sunny'}
-                 </span>
-                 <span style={{ fontSize: '0.85rem', opacity: 0.9 }}>{weather.condition}</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#ffce44' }}>
+                  {weather.condition.includes('Rain') ? 'rainy' : weather.condition.includes('Cloud') ? 'cloud' : 'sunny'}
+                </span>
+                <span style={{ fontSize: '0.85rem', opacity: 0.9 }}>{weather.condition}</span>
               </div>
             </div>
 
