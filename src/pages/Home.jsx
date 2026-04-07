@@ -123,7 +123,7 @@ export default function Home() {
               loop
               muted
               playsInline
-              src="/argusblend.mp4"
+              src="/argus_intro.mp4"
             >
               Your browser does not support the video tag.
             </video>
