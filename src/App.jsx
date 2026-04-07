@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
-import HazardMap from './pages/HazardMap'
-import SafeRoute from './pages/SafeRoute'
+import MapAndRoute from './pages/MapAndRoute'
 import Dashboard from './pages/Dashboard'
 
 export default function App() {
@@ -11,8 +10,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/"          element={<Home />} />
-        <Route path="/map"       element={<HazardMap />} />
-        <Route path="/route"     element={<SafeRoute />} />
+        <Route path="/map"       element={<MapAndRoute />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>

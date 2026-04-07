@@ -1,0 +1,179 @@
+.map-and-route-container {
+  display: flex;
+  height: calc(100vh - 64px); /* Subtracting navbar height */
+  width: 100%;
+  background: var(--pitch-black);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 380px;
+  max-width: 35%;
+  height: 100%;
+  overflow-y: auto;
+  background: rgba(10, 10, 10, 0.95);
+  border-right: 1px solid var(--glass-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 10;
+  color: var(--floral-white); /* Ensure text is white */
+}
+
+.map-area {
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+.sidebar-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-split {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.weather-box {
+  background: rgba(255, 252, 248, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.weather-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.weather-val {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.weather-lab {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.route-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.hazard-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.h-filter-btn {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--floral-white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.h-filter-btn.active {
+  background: var(--racing-red);
+  border-color: var(--racing-red);
+  box-shadow: 0 0 15px rgba(237, 28, 36, 0.3);
+}
+
+.danger-score-badge {
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pulse-dot {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% { box-shadow: 0 0 0 0px rgba(237, 28, 36, 0.4); }
+  100% { box-shadow: 0 0 0 15px rgba(237, 28, 36, 0); }
+}
+
+.leaflet-container {
+  background: #1a1a1a !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.leaflet-popup-tip {
+  background: #0a0a0a !important;
+}
+
+.legend-mini {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: white; /* Ensure legend text is white */
+}
+
+.l-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.l-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

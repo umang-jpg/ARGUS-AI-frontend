@@ -1,7 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PotholeChart from '../components/PotholeChart';
 import './Home.css';
+
+const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 0 }) => {
+  const [count, setCount] = useState(0);
+  const countRef = useRef(null);
+  const observerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+              if (!startTimestamp) startTimestamp = timestamp;
+              const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+              // ease-out cubic: 1 - pow(1 - x, 3)
+              const easedProgress = 1 - Math.pow(1 - progress, 3);
+              const currentCount = easedProgress * end;
+              setCount(currentCount);
+              if (progress < 1) {
+                window.requestAnimationFrame(step);
+              }
+            };
+            window.requestAnimationFrame(step);
+          }, delay);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (countRef.current) {
+      observer.observe(countRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [end, duration, delay]);
+
+  return (
+    <span ref={countRef}>
+      {count.toLocaleString(undefined, { 
+        minimumFractionDigits: decimals, 
+        maximumFractionDigits: decimals 
+      })}
+      {suffix}
+    </span>
+  );
+};
 export default function Home() {
   useEffect(() => {
     document.documentElement.classList.add("scroll-smooth");
@@ -105,8 +153,7 @@ export default function Home() {
         </div>
         <div className="hidden md:flex gap-8 font-['Space_Grotesk'] tracking-tighter uppercase text-sm font-bold">
           <Link className="text-primary border-b-2 border-primary pb-1 transition-all" to="/">Product</Link>
-          <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/map">Hazard Map</Link>
-          <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/route">SafeRoute</Link>
+          <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/map">Map & Routing</Link>
           <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/dashboard">Dashboard</Link>
         </div>
         <button className="bg-primary text-white px-5 py-2 font-headline uppercase tracking-tighter text-sm font-bold active:opacity-80 active:scale-95 transition-all">
@@ -216,19 +263,27 @@ export default function Home() {
       <section className="bg-inverse-surface py-24 px-8">
         <div className="max-w-5xl mx-auto flex flex-col divide-y divide-white/10">
           <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">1.78L</div>
+            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
+              <StatCounter end={1.78} decimals={2} suffix="L" delay={0} />
+            </div>
             <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">Road Deaths Per Year in India</div>
           </div>
           <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">44%</div>
+            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
+              <StatCounter end={44} suffix="%" delay={200} />
+            </div>
             <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">Are Two-Wheeler Riders</div>
           </div>
           <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">264</div>
+            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
+              <StatCounter end={264} delay={400} />
+            </div>
             <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">FPS on AMD Radeon 780M · DirectML</div>
           </div>
           <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">0.888</div>
+            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
+              <StatCounter end={0.888} decimals={3} delay={600} />
+            </div>
             <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">mAP50 · YOLOv10n Detection Accuracy</div>
           </div>
         </div>
