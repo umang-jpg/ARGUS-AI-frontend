@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import PotholeChart from '../components/PotholeChart';
 import './Home.css';
 
+const IMPACT_STATS = [
+  "1 death every 4.7 hrs",
+  "5 Indians killed daily",
+  "1,856 deaths in 2022"
+];
+
 const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 0 }) => {
   const [count, setCount] = useState(0);
   const countRef = useRef(null);
@@ -50,6 +56,54 @@ const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 
     </span>
   );
 };
+
+const ImpactCyclingCard = () => {
+  const [index, setIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % IMPACT_STATS.length);
+        setIsFading(false);
+      }, 400); 
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div 
+      className="bg-[#111111] rounded-2xl p-6 border border-white/5 overflow-hidden relative"
+      style={{ borderLeft: '4px solid #ED1C24' }}
+    >
+      <div className="relative z-10">
+        <h4 className="font-headline font-bold text-xs tracking-widest text-primary uppercase mb-4 opacity-70">What This Means</h4>
+        <div 
+          className={`font-headline font-bold text-2xl text-white tracking-tight leading-snug min-h-[60px] ${isFading ? 'opacity-0' : 'opacity-100'}`}
+          style={{ transition: 'opacity 0.4s ease' }}
+        >
+          {IMPACT_STATS[index]}
+        </div>
+        <div className="mt-6 text-[10px] text-neutral-500 uppercase tracking-widest font-bold">
+          Source: Rajya Sabha Q.1871
+        </div>
+      </div>
+      
+      {/* Progress Bar Container */}
+      <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5">
+        <div 
+          key={index}
+          className="h-full bg-primary"
+          style={{ 
+            animation: 'impact-progress 3s linear forwards'
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   useEffect(() => {
     document.documentElement.classList.add("scroll-smooth");
@@ -188,7 +242,7 @@ export default function Home() {
           <p className="text-on-surface-variant text-base md:text-lg max-w-2xl mb-12 leading-relaxed">
             ARGUS AI is the first vision-based pothole, pedestrian and obstacle detection system powered by edge intelligence for ultra-low latency response.
           </p>
-          <div className="flex flex-col sm:flex-row items-center gap-8 mb-20">
+          <div className="flex flex-col sm:flex-row items-center gap-8 mb-0">
             <button className="bg-inverse-on-surface text-inverse-surface px-12 py-4 font-headline uppercase font-bold tracking-tighter transition-all hover:bg-primary hover:text-white">
               Explore Hardware
             </button>
@@ -196,95 +250,36 @@ export default function Home() {
               VIEW FEATURES →
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-12 w-full">
-            <div>
-              <div className="font-headline font-bold text-4xl lg:text-5xl text-inverse-on-surface tracking-tighter">&lt;30ms</div>
-              <div className="text-[11px] font-label font-bold text-neutral-600 tracking-widest uppercase mt-2">Latency</div>
+          <div className="mt-16 w-full bg-white/5 border-t border-b border-white/10 py-4 overflow-hidden relative">
+            <style>
+              {`
+                @keyframes marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                @keyframes impact-progress {
+                  from { width: 0%; }
+                  to { width: 100%; }
+                }
+              `}
+            </style>
+            <div
+              className="flex whitespace-nowrap"
+              style={{ animation: 'marquee 30s linear infinite' }}
+            >
+              {[1, 2].map((i) => (
+                <span key={i} className="text-xs font-bold tracking-[0.25em] uppercase text-neutral-400 flex items-center">
+                  EDGE AI <span className="text-primary mx-3">·</span>
+                  CRASH DETECTION <span className="text-primary mx-3">·</span>
+                  ZERO CLOUD <span className="text-primary mx-3">·</span>
+                  SOS DISPATCH <span className="text-primary mx-3">·</span>
+                  POTHOLE ALERT <span className="text-primary mx-3">·</span>
+                  NO SUBSCRIPTION <span className="text-primary mx-3">·</span>
+                  INDIA-BUILT <span className="text-primary mx-3">·</span>
+                  TWO-WHEELER SAFETY <span className="text-primary mx-3">·</span>
+                </span>
+              ))}
             </div>
-            <div>
-              <div className="font-headline font-bold text-4xl lg:text-5xl text-inverse-on-surface tracking-tighter">88.8%</div>
-              <div className="text-[11px] font-label font-bold text-neutral-600 tracking-widest uppercase mt-2">Detection Accuracy</div>
-            </div>
-            <div>
-              <div className="font-headline font-bold text-4xl lg:text-5xl text-inverse-on-surface tracking-tighter">Rs.6000</div>
-              <div className="text-[11px] font-label font-bold text-neutral-600 tracking-widest uppercase mt-2">Starting Price</div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="bg-surface">
-        <div className="py-24 px-8 max-w-5xl mx-auto flex flex-col items-center">
-          <div className="w-full text-center mb-12">
-            <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">PHASE 01</div>
-            <h3 className="font-headline font-bold text-5xl text-on-surface mb-6">Assembled</h3>
-            <p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">Weatherproof ABS enclosure rated IP65 sealed against dust ingress and water jets, handlebar-mounted in under 5 minutes on any two-wheeler.</p>
-          </div>
-          <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-surface-container-low border border-black/5 flex items-center justify-center overflow-hidden">
-            <img className="w-full h-full object-cover" data-alt="Hyper-detailed 3D technical render of AI device internals showing circuit boards and glowing microchips in high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF" alt="" />
-          </div>
-        </div>
-        <div className="py-24 px-8 max-w-5xl mx-auto flex flex-col items-center border-t border-black/5">
-          <div className="w-full text-center mb-12">
-            <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">PHASE 02</div>
-            <h3 className="font-headline font-bold text-5xl text-on-surface mb-6">Internal Architecture</h3>
-            <p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">Raspberry Pi Zero 2W running YOLOv10n at 8–12 FPS on-device — 40,715 training images, 88.8% mAP, zero cloud dependency.</p>
-          </div>
-          <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-surface-container-low border border-black/5 flex items-center justify-center overflow-hidden">
-            <img className="w-full h-full object-cover grayscale opacity-80" data-alt="Hyper-detailed 3D technical render of AI device internals showing circuit boards and glowing microchips in high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF" alt="" />
-          </div>
-        </div>
-        <div className="py-24 px-8 max-w-5xl mx-auto flex flex-col items-center border-t border-black/5">
-          <div className="w-full text-center mb-12">
-            <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">PHASE 03</div>
-            <h3 className="font-headline font-bold text-5xl text-on-surface mb-6">System Intelligence</h3>
-            <p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">MPU6050 6-axis IMU detects crash events and triggers a 30-second dead man countdown auto-dispatching GPS coordinates via SIM800L GSM to emergency contacts.</p>
-          </div>
-          <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-surface-container-low border border-black/5 flex items-center justify-center overflow-hidden">
-            <img className="w-full h-full object-cover" data-alt="Hyper-detailed 3D technical render of AI device internals showing circuit boards and glowing microchips in high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF" alt="" />
-          </div>
-        </div>
-        <div className="py-24 px-8 max-w-5xl mx-auto flex flex-col items-center border-t border-black/5">
-          <div className="w-full text-center mb-12">
-            <h3 className="font-headline font-bold text-5xl text-on-surface mb-6">Live Demonstration</h3>
-            <p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">Watch the Argus AI system operating in real-world road conditions.</p>
-          </div>
-          <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-surface-container-low border border-black/5 flex items-center justify-center overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300">
-            {/* Interactive UI Overlay for Video element */}
-            <div className="absolute inset-0 bg-neutral-900/20 group-hover:bg-neutral-900/40 transition-colors z-10 flex items-center justify-center">
-              <div className="w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                <span className="material-symbols-outlined text-4xl ml-2">play_arrow</span>
-              </div>
-            </div>
-            {/* Placeholder Thumbnail */}
-            <img className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" data-alt="Video placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEJN9H5CVFLvEj6eXNR9wAFBIFsGYT_KdcNV9jmBq3XIew9n41Nech2L8d3zEBX5tjYxKrFbRSjnEOH3s2_Nlb9TkRYqQF0GS4UKgQfOI0_ai_avISkeTa3OvT11g_Ts0DB34i9ETItzSY3ViY8AkfwR0IbRsLY-oVMVEM6CBJXta8eMKQPdm8ClJPmF3Wtj9Gry6EU0n8E4T7yXKQ6OPrz7ohVGrRJT7BeYUk7UEuZbHM2807MimMLmcTdXzaxcYdhpPan5naU079" alt="Video presentation thumbnail" />
-          </div>
-        </div>
-      </section>
-      <section className="bg-inverse-surface py-24 px-8">
-        <div className="max-w-5xl mx-auto flex flex-col divide-y divide-white/10">
-          <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
-              <StatCounter end={1.78} decimals={2} suffix="L" delay={0} />
-            </div>
-            <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">Road Deaths Per Year in India</div>
-          </div>
-          <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
-              <StatCounter end={44} suffix="%" delay={200} />
-            </div>
-            <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">Are Two-Wheeler Riders</div>
-          </div>
-          <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
-              <StatCounter end={264} delay={400} />
-            </div>
-            <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">FPS on AMD Radeon 780M · DirectML</div>
-          </div>
-          <div className="py-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="font-headline font-bold text-6xl md:text-8xl text-primary tracking-tighter">
-              <StatCounter end={0.888} decimals={3} delay={600} />
-            </div>
-            <div className="font-label text-sm font-bold text-neutral-500 tracking-[0.2em] uppercase">mAP50 · YOLOv10n Detection Accuracy</div>
           </div>
         </div>
       </section>
@@ -293,7 +288,7 @@ export default function Home() {
           <div className="text-center">
             <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">THE SCALE OF THE CRISIS</div>
             <h2 className="font-headline font-bold text-4xl lg:text-6xl text-on-surface tracking-tighter leading-tight mb-6">
-              1,856 Indians killed by potholes<br />in 2022 — a 26% rise in two years.
+              1,856 Indians killed by potholes<br />in 2022 , a 26% rise in two years.
             </h2>
             <p className="text-on-surface-variant text-lg max-w-2xl mx-auto">
               Government data from Rajya Sabha Q.1871 confirms pothole fatalities are accelerating every year with no sign of reversal.
@@ -311,6 +306,9 @@ export default function Home() {
                   <div className="text-on-surface-variant text-sm font-bold uppercase tracking-widest">{label}</div>
                 </div>
               ))}
+              <div className="mt-2">
+                <ImpactCyclingCard />
+              </div>
             </div>
             <div className="md:w-2/3">
               <PotholeChart />
@@ -318,6 +316,38 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <section className="bg-inverse-surface py-20">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <div className="border-t-4 border-primary w-16 mb-8"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
+            {/* Left Card */}
+            <div className="py-20 px-16 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
+              <div className="font-headline font-bold text-8xl lg:text-9xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+                <StatCounter end={1.78} decimals={2} suffix="L" delay={0} />
+              </div>
+              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+                ROAD DEATHS<br />PER YEAR IN INDIA
+              </div>
+              <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
+                Every year, India loses more lives on roads than most countries lose in armed conflict.
+              </p>
+            </div>
+            {/* Right Card */}
+            <div className="py-20 px-16 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
+              <div className="font-headline font-bold text-8xl lg:text-9xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+                <StatCounter end={44} suffix="%" delay={200} />
+              </div>
+              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+                ARE TWO-WHEELER<br />RIDERS
+              </div>
+              <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
+                Nearly half of every road fatality in India is someone on a bike or scooter with no protection, no warning system, no second chance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-surface py-24 px-8">
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <div className="w-full text-center md:text-left mb-4">
@@ -327,43 +357,225 @@ export default function Home() {
               Advanced computer vision and edge processing designed to prevent accidents before they happen.
             </p>
           </div>
-          <div className="flex flex-col md:flex-row items-center gap-12 p-12 border border-[#E2E0DA] bg-white">
-            <span className="material-symbols-outlined text-primary text-6xl" style={{ fontVariationSettings: '"FILL" 1' }}>road</span>
-            <div className="text-center md:text-left">
-              <h4 className="font-headline font-bold text-3xl mb-4 tracking-tight">Pothole Detection</h4>
-              <p className="text-on-surface-variant text-lg leading-relaxed">Early-warning alerts for surface deformities at speeds up to 120km/h with sub-meter accuracy.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Row 1: Hero Card (Auto SOS Dispatch) */}
+            <div className="md:col-span-2 group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[240px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+              <div className="relative z-10">
+                <div className="text-primary font-bold text-xs tracking-[0.2em] uppercase mb-2 opacity-80">Priority Safety</div>
+                <h4 className="font-headline font-bold text-2xl md:text-3xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Auto SOS Dispatch</h4>
+                <p className="text-sm text-neutral-400 mt-2 max-w-sm leading-relaxed">
+                  Instant crash detection notifies emergency services with precise GPS coordinates and vitals via SIM800L GSM.
+                </p>
+              </div>
+              <div className="absolute right-12 bottom-1/2 translate-y-1/2 opacity-80 transition-transform duration-400 ease-out group-hover:scale-110 pointer-events-none">
+                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#ED1C24" fillOpacity="0.2" stroke="#ED1C24" strokeWidth="0.5" />
+                  <circle cx="12" cy="9" r="3" fill="#ED1C24" />
+                  <circle cx="12" cy="9" r="3" stroke="#ED1C24" strokeWidth="1">
+                    <animate attributeName="r" values="3;12" dur="1.5s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.8;0" dur="1.5s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="12" cy="9" r="3" stroke="#ED1C24" strokeWidth="1">
+                    <animate attributeName="r" values="3;20" dur="1.5s" begin="0.75s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.5;0" dur="1.5s" begin="0.75s" repeatCount="indefinite" />
+                  </circle>
+                </svg>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row items-center gap-12 p-12 border border-[#E2E0DA] bg-white">
-            <span className="material-symbols-outlined text-primary text-6xl">people</span>
-            <div className="text-center md:text-left">
-              <h4 className="font-headline font-bold text-3xl mb-4 tracking-tight">Pedestrian Alert</h4>
-              <p className="text-on-surface-variant text-lg leading-relaxed">Predictive behavioral modeling identifies potential road crossings before they occur.</p>
+
+            {/* Row 2: Pothole Detection & Pedestrian Alert */}
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+              <div className="relative z-10 text-left">
+                <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Pothole Detection</h4>
+                <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
+                  Early-warning alerts for surface deformities at speeds up to 120km/h.
+                </p>
+              </div>
+              <div className="absolute right-6 bottom-4 text-7xl opacity-80 transition-transform duration-400 ease-out group-hover:scale-110 pointer-events-none grayscale group-hover:grayscale-0 transition-all">
+                🕳️
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row items-center gap-12 p-12 border border-[#E2E0DA] bg-white">
-            <span className="material-symbols-outlined text-primary text-6xl">emergency</span>
-            <div className="text-center md:text-left">
-              <h4 className="font-headline font-bold text-3xl mb-4 tracking-tight">Auto SOS Dispatch</h4>
-              <p className="text-on-surface-variant text-lg leading-relaxed">Instant crash detection notifies emergency services with precise GPS coordinates and vitals.</p>
+
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+              <div className="relative z-10 text-left">
+                <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Pedestrian Alert</h4>
+                <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
+                  Predictive behavioral modeling identifies potential crossings early.
+                </p>
+              </div>
+              <div className="absolute right-6 bottom-4 text-7xl opacity-80 transition-transform duration-400 ease-out group-hover:scale-110 pointer-events-none grayscale group-hover:grayscale-0 transition-all">
+                🚶
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row items-center gap-12 p-12 border border-[#E2E0DA] bg-white">
-            <span className="material-symbols-outlined text-primary text-6xl">memory</span>
-            <div className="text-center md:text-left">
-              <h4 className="font-headline font-bold text-3xl mb-4 tracking-tight">Edge AI</h4>
-              <p className="text-on-surface-variant text-lg leading-relaxed">No cloud dependency. All neural network processing happens locally on the device hardware.</p>
+
+            {/* Row 3: Edge AI & SafeRoute Intelligence */}
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+              <div className="relative z-10 text-left">
+                <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Edge AI</h4>
+                <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
+                  No cloud dependency. All neural network processing happens locally.
+                </p>
+              </div>
+              <div className="absolute right-6 bottom-4 text-7xl opacity-80 transition-transform duration-400 ease-out group-hover:scale-110 pointer-events-none grayscale group-hover:grayscale-0 transition-all">
+                ⚡
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row items-center gap-12 p-12 border border-[#E2E0DA] bg-white">
-            <span className="material-symbols-outlined text-primary text-6xl">route</span>
-            <div className="text-center md:text-left">
-              <h4 className="font-headline font-bold text-3xl mb-4 tracking-tight">SafeRoute Intelligence</h4>
-              <p className="text-on-surface-variant text-lg leading-relaxed">Dynamic re-routing based on real-time road condition data harvested from the Argus fleet.</p>
+
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+              <div className="relative z-10 text-left">
+                <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">SafeRoute Intelligence</h4>
+                <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
+                  Dynamic re-routing based on real-time road condition data.
+                </p>
+              </div>
+              <div className="absolute right-6 bottom-4 text-7xl opacity-80 transition-transform duration-400 ease-out group-hover:scale-110 pointer-events-none grayscale group-hover:grayscale-0 transition-all">
+                🗺️
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <section className="bg-inverse-surface py-24 px-8">
+        <div className="max-w-5xl mx-auto">
+          {/* Section Header */}
+          <div className="mb-16 text-left">
+            <h2 className="font-headline font-bold text-4xl text-inverse-on-surface mb-3 tracking-tight uppercase" style={{ color: 'rgba(255,255,255,0.9)' }}>ENGINEERING STAGES</h2>
+            <div className="h-[3px] w-12 bg-primary"></div>
+          </div>
+
+          {/* Phases Grid Wrapper */}
+          <div style={{ background: '#0f0f0f', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '28px', padding: '40px', position: 'relative', overflow: 'hidden' }}>
+            {/* Decorative Background Glow */}
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60%', height: '60%', background: 'radial-gradient(circle, rgba(237,28,36,0.04) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
+
+            {/* Phases Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+              {/* Phase 01 */}
+              <div
+                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
+                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
+              >
+                <div className="w-full h-[220px] overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-[1.04]"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
+                    alt="Assembled enclosure"
+                  />
+                </div>
+                <div className="p-6 flex flex-col gap-3">
+                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 1: ASSEMBLED</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>Weatherproof ABS enclosure rated IP65 sealed against dust ingress and water jets, handlebar-mounted in under 5 minutes on any two-wheeler.</p>
+                </div>
+              </div>
+
+              {/* Phase 02 */}
+              <div
+                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
+                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
+              >
+                <div className="w-full h-[220px] overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover grayscale opacity-80 transition-transform duration-400 ease-out group-hover:scale-[1.04]"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
+                    alt="Internal architecture"
+                  />
+                </div>
+                <div className="p-6 flex flex-col gap-3">
+                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 2: INTERNAL ARCHITECTURE</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>Raspberry Pi Zero 2W running YOLOv10n at 8–12 FPS on-device with 40,715 training images, 88.8% mAP, zero cloud dependency.</p>
+                </div>
+              </div>
+
+              {/* Phase 03 */}
+              <div
+                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
+                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
+              >
+                <div className="w-full h-[220px] overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-[1.04]"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
+                    alt="System intelligence"
+                  />
+                </div>
+                <div className="p-6 flex flex-col gap-3">
+                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 3: SYSTEM INTELLIGENCE</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>MPU6050 6-axis IMU detects crash events and triggers a 30-second dead man countdown auto-dispatching GPS coordinates via SIM800L GSM to emergency contacts.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-surface-container-low py-32 px-8">
+        <div className="max-w-5xl mx-auto flex flex-col gap-24">
+          <div className="w-full">
+            <h3 className="font-headline font-bold text-4xl mb-12 tracking-tight text-center md:text-left">Technical Specifications</h3>
+            <div className="space-y-8">
+              <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Processor</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">Quad-core ARM Cortex-A53 · 1GHz</span>
+              </div>
+              <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">AI Model</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">YOLOv10n · 88.8% mAP · 40,715 training images</span>
+              </div>
+              <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Field of View</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">120° FOV · Pi Camera v2</span>
+              </div>
+              <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Detection Range</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">Up to 8 metres · &lt;30ms latency</span>
+              </div>
+              <div className="flex justify-between items-end border-b border-black/5 pb-4">
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Total Cost</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">Rs. 6000 one-time · no subscription</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            {/* Testimonial 1 */}
+            <div className="bg-white p-10 relative shadow-sm border border-black/5">
+              <span className="material-symbols-outlined text-primary text-7xl absolute top-0 left-8 -translate-y-1/2 bg-white px-2">format_quote</span>
+              <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
+                "I hit a pothole on the expressway at 80kmph last month. Argus buzzed before I even saw it. I don't ride without it anymore."
+              </p>
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-surface-container-high rounded-full overflow-hidden">
+                  <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkR75ehV4nngtDapKD-8gPR4Vci662LOPoCrOINOPfQOdsgo-2_iBhkM-S6w_k2hWVbmC24TrHVKx1JxGkfKOHKQg0mnNNk262MfaK90bU4dcf07lbaW9Ccvo7hrotGnBk80F3lv-S0hSztz9I5XlhD7DNy6JQGj9KipW4Q43lcevOkSB0FI2Fzglb_WMksBqaiw77xdIIyctt4jlmKgm_coUn4ZOkNa5W20aJFuXnU540WV_t-3tfAkzWDqh42ICKF7DrwT6bWNUW" alt="" />
+                </div>
+                <div>
+                  <div className="font-bold text-lg tracking-tight">Rohan Mehta</div>
+                  <div className="text-xs text-on-surface-variant font-bold tracking-widest uppercase">Daily Commuter, Pune</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-white p-10 relative shadow-sm border border-black/5">
+              <span className="material-symbols-outlined text-primary text-7xl absolute top-0 left-8 -translate-y-1/2 bg-white px-2">format_quote</span>
+              <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
+                "My son rides 40km to college every day. Knowing Argus will SMS me if something happens gives me actual peace of mind."
+              </p>
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-surface-container-high rounded-full overflow-hidden flex items-center justify-center text-neutral-400">
+                  <span className="material-symbols-outlined text-4xl">account_circle</span>
+                </div>
+                <div>
+                  <div className="font-bold text-lg tracking-tight">Sunita Iyer</div>
+                  <div className="text-xs text-on-surface-variant font-bold tracking-widest uppercase">Parent, Navi Mumbai</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
       <section className="bg-inverse-surface py-32 px-8">
         <div className="max-w-5xl mx-auto flex flex-col gap-20">
           <div className="text-center">
@@ -404,52 +616,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-surface-container-low py-32 px-8">
-        <div className="max-w-5xl mx-auto flex flex-col gap-24">
-          <div className="w-full">
-            <h3 className="font-headline font-bold text-4xl mb-12 tracking-tight text-center md:text-left">Technical Specifications</h3>
-            <div className="space-y-8">
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Processor</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">Quad-core ARM Cortex-A53 · 1GHz</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">AI Model</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">YOLOv10n · 88.8% mAP · 40,715 training images</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Field of View</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">120° FOV · Pi Camera v2</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Detection Range</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">Up to 8 metres · &lt;30ms latency</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Total Cost</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">Rs. 6000 one-time · no subscription</span>
-              </div>
-            </div>
-          </div>
-          <div className="w-full">
-            <div className="bg-white p-12 md:p-16 relative shadow-sm border border-black/5">
-              <span className="material-symbols-outlined text-primary text-7xl absolute top-0 left-8 md:left-16 -translate-y-1/2 bg-white px-2">format_quote</span>
-              <p className="font-headline text-3xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
-                "Argus AI isn't just another gadget; it's the black box of safety. The latency on the RDNA hardware is so low it feels predictive rather than reactive."
-              </p>
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-surface-container-high rounded-full overflow-hidden">
-                  <img className="w-full h-full object-cover" data-alt="Portrait of a professional motorcycle racer in full gear looking into the distance with urban cityscape background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkR75ehV4nngtDapKD-8gPR4Vci662LOPoCrOINOPfQOdsgo-2_iBhkM-S6w_k2hWVbmC24TrHVKx1JxGkfKOHKQg0mnNNk262MfaK90bU4dcf07lbaW9Ccvo7hrotGnBk80F3lv-S0hSztz9I5XlhD7DNy6JQGj9KipW4Q43lcevOkSB0FI2Fzglb_WMksBqaiw77xdIIyctt4jlmKgm_coUn4ZOkNa5W20aJFuXnU540WV_t-3tfAkzWDqh42ICKF7DrwT6bWNUW" alt="" />
-                </div>
-                <div>
-                  <div className="font-bold text-lg tracking-tight">Vikram Singh</div>
-                  <div className="text-xs text-on-surface-variant font-bold tracking-widest uppercase">Lead Tester, Apex Racing</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
       <section className="bg-primary py-32 px-8 flex flex-col items-center text-center">
         <h2 className="font-headline font-bold text-5xl lg:text-7xl text-inverse-on-surface tracking-tighter mb-12">
           Ready to ride safer?

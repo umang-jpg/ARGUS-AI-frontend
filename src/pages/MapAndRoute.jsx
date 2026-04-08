@@ -154,8 +154,8 @@ export default function MapAndRoute() {
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-section">
-          <h2 className="glass-label" style={{ fontSize: '1.2rem', marginBottom: '15px', color: 'var(--floral-white)' }}>Route Configuration</h2>
-          <div className="input-split">
+          <h2 className="glass-label" style={{ fontSize: '1rem', marginBottom: '8px', color: 'var(--floral-white)' }}>Route Configuration</h2>
+          <div className="input-split" style={{ marginBottom: '8px' }}>
             <input
               className="glass-input"
               style={{ fontSize: '0.8rem' }}
@@ -183,46 +183,33 @@ export default function MapAndRoute() {
         </div>
 
         <div className="sidebar-section">
-          <div className="weather-box" style={{ background: 'rgba(255, 252, 248, 0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{destination || 'Mumbai'}</span>
-              <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>{new Date().toLocaleDateString('en-US', { weekday: 'long', hour: 'numeric', minute: 'numeric' })}</span>
+          <div className="weather-box" style={{ padding: '10px 12px', gap: '4px', background: 'rgba(255,252,248,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{destination || 'Mumbai'}</span>
+              <span style={{ fontSize: '0.6rem', opacity: 0.4 }}>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', margin: '15px 0' }}>
-              <span style={{ fontSize: '3rem', fontWeight: '300', color: 'white' }}>{weather.temp}</span>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#ffce44' }}>
-                  {weather.condition.includes('Rain') ? 'rainy' : weather.condition.includes('Cloud') ? 'cloud' : 'sunny'}
-                </span>
-                <span style={{ fontSize: '0.85rem', opacity: 0.9 }}>{weather.condition}</span>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '4px 0' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: '300', color: 'white' }}>{weather.temp}</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#ffce44' }}>
+                {weather.condition.includes('Rain') ? 'rainy' : weather.condition.includes('Cloud') ? 'cloud' : 'sunny'}
+              </span>
+              <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{weather.condition}</span>
             </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
-              <div className="weather-item">
-                <span className="weather-lab">Precip</span>
-                <span className="weather-val" style={{ fontSize: '0.85rem' }}>4%</span>
-              </div>
-              <div className="weather-item" style={{ borderLeft: '1px solid rgba(255,255,255,0.05)', paddingLeft: '10px' }}>
-                <span className="weather-lab">Humidity</span>
-                <span className="weather-val" style={{ fontSize: '0.85rem' }}>{weather.humidity}</span>
-              </div>
-              <div className="weather-item" style={{ borderLeft: '1px solid rgba(255,255,255,0.05)', paddingLeft: '10px' }}>
-                <span className="weather-lab">Wind</span>
-                <span className="weather-val" style={{ fontSize: '0.85rem' }}>14 km/h</span>
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '6px', gap: '4px' }}>
+              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Precip</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>4%</div></div>
+              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Humidity</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>{weather.humidity}</div></div>
+              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wind</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>14 km/h</div></div>
             </div>
           </div>
         </div>
 
-        <div className="sidebar-section liquid-glass glass-card route-summary">
+        <div className="sidebar-section liquid-glass glass-card route-summary" style={{ padding: '12px' }}>
           <h3 className="glass-label">AI Route Summary</h3>
           {score !== null ? (
-            <div className="danger-score-badge" style={{ background: `${routeColor}15`, border: `1px solid ${routeColor}` }}>
+            <div className="danger-score-badge" style={{ background: `${routeColor}15`, border: `1px solid ${routeColor}`, padding: '10px' }}>
               <div style={{ fontSize: '0.7rem', opacity: 0.8, textTransform: 'uppercase', color: 'white' }}>Safety Assessment</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', margin: '5px 0', color: 'white' }}>{score}/100</div>
-              <div style={{ color: routeColor, fontWeight: '700', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: '800', margin: '5px 0', color: 'white' }}>{score}/100</div>
+              <div style={{ color: routeColor, fontWeight: '700', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: routeColor }}></div>
                 {safetyLabel}
               </div>
@@ -234,15 +221,15 @@ export default function MapAndRoute() {
           )}
         </div>
 
-        <div className="sidebar-section liquid-glass glass-card stats-container">
+        <div className="sidebar-section liquid-glass glass-card stats-container" style={{ padding: '12px' }}>
           <h3 className="glass-label">Hazard Intelligence</h3>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px' }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>{hazards.length}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white' }}>{hazards.length}</div>
               <div style={{ fontSize: '0.65rem', opacity: 0.6, textTransform: 'uppercase', color: 'white' }}>Detections</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--racing-red)' }}>{crashes.length}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--racing-red)' }}>{crashes.length}</div>
               <div style={{ fontSize: '0.65rem', opacity: 0.6, textTransform: 'uppercase', color: 'white' }}>SOS Dispatched</div>
             </div>
           </div>

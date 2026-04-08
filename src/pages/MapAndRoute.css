@@ -13,10 +13,10 @@
   overflow-y: auto;
   background: rgba(10, 10, 10, 0.95);
   border-right: 1px solid var(--glass-border);
-  padding: 24px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 10px;
   z-index: 10;
   color: var(--floral-white); /* Ensure text is white */
 }
@@ -69,7 +69,7 @@
 }
 
 .weather-lab {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   opacity: 0.6;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -95,9 +95,9 @@
 }
 
 .h-filter-btn {
-  padding: 12px;
+  padding: 6px 8px;
   border-radius: 10px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--glass-border);
   color: var(--floral-white);
