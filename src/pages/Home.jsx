@@ -67,19 +67,19 @@ const ImpactCyclingCard = () => {
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % IMPACT_STATS.length);
         setIsFading(false);
-      }, 400); 
+      }, 400);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div 
+    <div
       className="bg-[#111111] rounded-2xl p-6 border border-white/5 overflow-hidden relative"
       style={{ borderLeft: '4px solid #ED1C24' }}
     >
       <div className="relative z-10">
         <h4 className="font-headline font-bold text-xs tracking-widest text-primary uppercase mb-4 opacity-70">What This Means</h4>
-        <div 
+        <div
           className={`font-headline font-bold text-2xl text-white tracking-tight leading-snug min-h-[60px] ${isFading ? 'opacity-0' : 'opacity-100'}`}
           style={{ transition: 'opacity 0.4s ease' }}
         >
@@ -89,13 +89,13 @@ const ImpactCyclingCard = () => {
           Source: Rajya Sabha Q.1871
         </div>
       </div>
-      
+
       {/* Progress Bar Container */}
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5">
-        <div 
+        <div
           key={index}
           className="h-full bg-primary"
-          style={{ 
+          style={{
             animation: 'impact-progress 3s linear forwards'
           }}
         />

@@ -183,34 +183,27 @@ export default function MapAndRoute() {
         </div>
 
         <div className="sidebar-section">
-          <div className="weather-box" style={{ padding: '10px 12px', gap: '4px', background: 'rgba(255,252,248,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="weather-box">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{destination || 'Mumbai'}</span>
-              <span style={{ fontSize: '0.6rem', opacity: 0.4 }}>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '4px 0' }}>
-              <span style={{ fontSize: '1.4rem', fontWeight: '300', color: 'white' }}>{weather.temp}</span>
-              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#ffce44' }}>
-                {weather.condition.includes('Rain') ? 'rainy' : weather.condition.includes('Cloud') ? 'cloud' : 'sunny'}
-              </span>
-              <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{weather.condition}</span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--floral-white)' }}>{destination || 'Mumbai'}</span>
+              <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>{weather.condition}</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '6px', gap: '4px' }}>
-              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Precip</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>4%</div></div>
-              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Humidity</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>{weather.humidity}</div></div>
-              <div><div style={{ fontSize: '0.55rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wind</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>14 km/h</div></div>
+              <div><div style={{ fontSize: '0.5rem', opacity: 0.5, textTransform: 'uppercase' }}>Precip</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>4%</div></div>
+              <div><div style={{ fontSize: '0.5rem', opacity: 0.5, textTransform: 'uppercase' }}>Humidity</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>{weather.humidity}</div></div>
+              <div><div style={{ fontSize: '0.5rem', opacity: 0.5, textTransform: 'uppercase' }}>Wind</div><div style={{ fontSize: '0.75rem', fontWeight: '700' }}>14 km/h</div></div>
             </div>
           </div>
         </div>
 
-        <div className="sidebar-section liquid-glass glass-card route-summary" style={{ padding: '12px' }}>
+        <div className="sidebar-section liquid-glass glass-card route-summary">
           <h3 className="glass-label">AI Route Summary</h3>
           {score !== null ? (
-            <div className="danger-score-badge" style={{ background: `${routeColor}15`, border: `1px solid ${routeColor}`, padding: '10px' }}>
-              <div style={{ fontSize: '0.7rem', opacity: 0.8, textTransform: 'uppercase', color: 'white' }}>Safety Assessment</div>
-              <div style={{ fontSize: '1.3rem', fontWeight: '800', margin: '5px 0', color: 'white' }}>{score}/100</div>
-              <div style={{ color: routeColor, fontWeight: '700', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: routeColor }}></div>
+            <div className="danger-score-badge" style={{ background: `${routeColor}15`, border: `1px solid ${routeColor}`, padding: '8px' }}>
+              <div style={{ fontSize: '0.65rem', opacity: 0.8, textTransform: 'uppercase', color: 'white' }}>Safety Assessment</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: '800', margin: '2px 0', color: 'white' }}>{score}/100</div>
+              <div style={{ color: routeColor, fontWeight: '700', fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: routeColor }}></div>
                 {safetyLabel}
               </div>
             </div>
@@ -221,7 +214,7 @@ export default function MapAndRoute() {
           )}
         </div>
 
-        <div className="sidebar-section liquid-glass glass-card stats-container" style={{ padding: '12px' }}>
+        <div className="sidebar-section liquid-glass glass-card stats-container">
           <h3 className="glass-label">Hazard Intelligence</h3>
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px' }}>
             <div style={{ textAlign: 'center' }}>

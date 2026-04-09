@@ -10,10 +10,10 @@
   width: 380px;
   max-width: 35%;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   background: rgba(10, 10, 10, 0.95);
   border-right: 1px solid var(--glass-border);
-  padding: 14px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -43,11 +43,11 @@
   background: rgba(255, 252, 248, 0.05);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 20px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 6px;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 }
 
@@ -65,7 +65,7 @@
 
 .weather-val {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .weather-lab {
@@ -78,7 +78,11 @@
 .route-summary {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+}
+
+.sidebar .glass-card {
+  padding: 10px 12px !important;
 }
 
 .stats-container {
