@@ -199,8 +199,100 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    const section = document.getElementById('amd-section');
+    if (!section) return;
+
+    function easeOutQuart(t) {
+      return 1 - Math.pow(1 - t, 4);
+    }
+
+    function animateCount(el, target, duration, delay) {
+      setTimeout(() => {
+        const start = performance.now();
+        function frame(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          el.textContent = Math.round(easeOutQuart(progress) * target);
+          if (progress < 1) requestAnimationFrame(frame);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(frame);
+      }, delay);
+    }
+
+    let triggered = false;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !triggered) {
+          triggered = true;
+
+          // Stagger rows in
+          const rows = section.querySelectorAll('[data-perf-row]');
+          rows.forEach((row, i) => {
+            setTimeout(() => row.classList.add('row-visible'), i * 130);
+          });
+
+          // Count up FPS numbers
+          const countEls = section.querySelectorAll('[data-fps-count]');
+          countEls.forEach((el, i) => {
+            const target = parseInt(el.getAttribute('data-fps-count'));
+            animateCount(el, target, 1400, 200 + i * 130);
+          });
+
+          // Fill progress bars
+          const bars = section.querySelectorAll('[data-fps-bar]');
+          bars.forEach((bar, i) => {
+            const fps = parseInt(bar.getAttribute('data-fps-bar'));
+            const max = 264;
+            const pct = (fps / max) * 100;
+            setTimeout(() => {
+              bar.style.transition = 'width 1100ms cubic-bezier(0.16, 1, 0.3, 1)';
+              bar.style.width = pct + '%';
+            }, 350 + i * 130);
+          });
+
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const bar = document.getElementById('argus-scroll-bar');
+    if (!bar) return;
+    function onScroll() {
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const cards = document.querySelectorAll('.feature-reveal');
+    if (!cards.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('is-visible');
+          }, i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
+      <div id="argus-scroll-bar" />
       <nav className="fixed top-0 w-full z-50 h-16 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-black/5 dark:border-white/5 flex justify-between items-center px-8 mx-auto">
         <div className="text-xl font-bold tracking-tighter text-black dark:text-white font-headline">
           ARGUS<span className="text-primary">·</span>AI
@@ -214,7 +306,7 @@ export default function Home() {
           Get Early Access
         </button>
       </nav>
-      <section className="min-h-screen w-full bg-inverse-surface pt-16 flex flex-col items-center">
+      <section className="min-h-screen w-full bg-inverse-surface pt-16 flex flex-col items-center bleed-to-light">
         <div className="w-full h-[512px] md:h-[665px] bg-[#161618] flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#2a2a2d] to-transparent opacity-40 pointer-events-none"></div>
           <div className="relative w-full h-full flex items-center justify-center">
@@ -283,7 +375,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-surface py-24 px-8">
+      <section className="bg-surface py-24 px-8 bleed-to-dark">
         <div className="max-w-5xl mx-auto flex flex-col gap-16">
           <div className="text-center">
             <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">THE SCALE OF THE CRISIS</div>
@@ -316,7 +408,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-inverse-surface py-20">
+      <section className="bg-inverse-surface py-20 bleed-to-light">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="border-t-4 border-primary w-16 mb-8"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 w-full divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
@@ -348,7 +440,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-surface py-24 px-8">
+      <section className="bg-surface py-24 px-8 bleed-to-dark">
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <div className="w-full text-center md:text-left mb-4">
             <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest uppercase">Core Capabilities</div>
@@ -359,7 +451,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Row 1: Hero Card (Auto SOS Dispatch) */}
-            <div className="md:col-span-2 group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[240px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+            <div className="md:col-span-2 group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[240px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10">
                 <div className="text-primary font-bold text-xs tracking-[0.2em] uppercase mb-2 opacity-80">Priority Safety</div>
                 <h4 className="font-headline font-bold text-2xl md:text-3xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Auto SOS Dispatch</h4>
@@ -384,7 +476,7 @@ export default function Home() {
             </div>
 
             {/* Row 2: Pothole Detection & Pedestrian Alert */}
-            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10 text-left">
                 <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Pothole Detection</h4>
                 <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
@@ -396,7 +488,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10 text-left">
                 <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Pedestrian Alert</h4>
                 <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
@@ -409,7 +501,7 @@ export default function Home() {
             </div>
 
             {/* Row 3: Edge AI & SafeRoute Intelligence */}
-            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10 text-left">
                 <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Edge AI</h4>
                 <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
@@ -421,7 +513,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20">
+            <div className="group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[200px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10 text-left">
                 <h4 className="font-headline font-bold text-2xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">SafeRoute Intelligence</h4>
                 <p className="text-sm text-neutral-400 mt-1 max-w-[200px] leading-relaxed">
@@ -436,7 +528,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-inverse-surface py-24 px-8">
+      <section className="bg-inverse-surface py-24 px-8 bleed-to-light">
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
           <div className="mb-16 text-left">
@@ -509,7 +601,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-surface-container-low py-32 px-8">
+      <section className="bg-surface-container-low py-32 px-8 bleed-to-dark">
         <div className="max-w-5xl mx-auto flex flex-col gap-24">
           <div className="w-full">
             <h3 className="font-headline font-bold text-4xl mb-12 tracking-tight text-center md:text-left">Technical Specifications</h3>
@@ -576,7 +668,7 @@ export default function Home() {
 
 
 
-      <section className="bg-inverse-surface py-32 px-8">
+      <section id="amd-section" className="bg-inverse-surface py-32 px-8 bleed-to-red">
         <div className="max-w-5xl mx-auto flex flex-col gap-20">
           <div className="text-center">
             <h2 className="font-headline font-bold text-5xl lg:text-7xl text-inverse-on-surface tracking-tighter leading-none mb-8">
@@ -595,21 +687,65 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                <tr className="group">
+                <tr className="group" data-perf-row="amd">
                   <td className="py-10 text-primary font-bold text-3xl tracking-tighter">AMD Radeon 780M</td>
-                  <td className="py-10 text-primary font-bold text-3xl tracking-tighter text-right">264 FPS</td>
+                  <td className="py-10 text-primary font-bold text-3xl tracking-tighter text-right"><span data-fps-count="264">264</span> FPS</td>
                 </tr>
-                <tr className="group opacity-50">
+                <tr aria-hidden="true" style={{ borderTop: 'none' }}>
+                  <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
+                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div
+                        data-fps-bar="264"
+                        data-fps-max="264"
+                        style={{ height: '100%', width: '0%', background: '#ED1C24', borderRadius: '2px' }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr className="group opacity-50" data-perf-row="nvidia">
                   <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter">NVIDIA RTX 3050 (Mobile)</td>
-                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right">212 FPS</td>
+                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right"><span data-fps-count="212">212</span> FPS</td>
                 </tr>
-                <tr className="group opacity-50">
+                <tr aria-hidden="true" style={{ borderTop: 'none' }}>
+                  <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
+                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div
+                        data-fps-bar="212"
+                        data-fps-max="264"
+                        style={{ height: '100%', width: '0%', background: 'rgba(250,250,248,0.3)', borderRadius: '2px' }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr className="group opacity-50" data-perf-row="intel">
                   <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter">Intel Core i5 (13th Gen)</td>
-                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right">88 FPS</td>
+                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right"><span data-fps-count="88">88</span> FPS</td>
                 </tr>
-                <tr className="group opacity-50">
+                <tr aria-hidden="true" style={{ borderTop: 'none' }}>
+                  <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
+                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div
+                        data-fps-bar="88"
+                        data-fps-max="264"
+                        style={{ height: '100%', width: '0%', background: 'rgba(250,250,248,0.3)', borderRadius: '2px' }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr className="group opacity-50" data-perf-row="ryzen">
                   <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter">Ryzen 7 (Standard)</td>
-                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right">104 FPS</td>
+                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right"><span data-fps-count="104">104</span> FPS</td>
+                </tr>
+                <tr aria-hidden="true" style={{ borderTop: 'none' }}>
+                  <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
+                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div
+                        data-fps-bar="104"
+                        data-fps-max="264"
+                        style={{ height: '100%', width: '0%', background: 'rgba(250,250,248,0.3)', borderRadius: '2px' }}
+                      />
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -617,7 +753,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-primary py-32 px-8 flex flex-col items-center text-center">
+      <section className="bg-primary py-32 px-8 flex flex-col items-center text-center bleed-to-footer">
         <h2 className="font-headline font-bold text-5xl lg:text-7xl text-inverse-on-surface tracking-tighter mb-12">
           Ready to ride safer?
         </h2>
