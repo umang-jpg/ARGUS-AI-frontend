@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, Marker } from 'react-leaflet'
+import React, { useEffect, useState } from 'react'
+import { MapContainer, TileLayer, CircleMarker, Popup, Polyline } from 'react-leaflet'
 import supabase from '../supabase'
 import 'leaflet/dist/leaflet.css'
 import './GlassUI.css'
@@ -146,7 +146,6 @@ export default function MapAndRoute() {
 
   const safetyLabel = score === null ? '' : score < 20 ? '🟢 OPTIMAL' : score < 50 ? '🟡 MODERATE' : '🔴 HIGH RISK'
   const routeColor = score === null ? '#FAFAF8' : score < 20 ? '#44ff44' : score < 50 ? '#ffff44' : '#ED1C24'
-
   const filteredHazards = hFilter === 'all' ? hazards : hazards.filter(h => h.hazard_class === hFilter)
 
   return (
@@ -254,9 +253,26 @@ export default function MapAndRoute() {
           />
 
           {/* Route Display */}
-          {route && <Polyline positions={route} color={routeColor} weight={6} opacity={0.8} />}
-          {fromPt && <Marker position={[fromPt.lat, fromPt.lng]}><Popup>Start: {origin}</Popup></Marker>}
-          {toPt && <Marker position={[toPt.lat, toPt.lng]}><Popup>End: {destination}</Popup></Marker>}
+          {route && (
+            <>
+              {/* Layer 1: Glow Base */}
+              <Polyline positions={route} color="#FFFFFF" weight={10} opacity={0.06} />
+              {/* Layer 2: Main Route */}
+              <Polyline positions={route} color={routeColor} weight={5} opacity={0.85} />
+            </>
+          )}
+          
+          {fromPt && (
+            <CircleMarker center={[fromPt.lat, fromPt.lng]} radius={10} fillColor="#ED1C24" color="white" weight={3} fillOpacity={1}>
+              <Popup>Start: {origin}</Popup>
+            </CircleMarker>
+          )}
+          
+          {toPt && (
+            <CircleMarker center={[toPt.lat, toPt.lng]} radius={10} fillColor="#44ff44" color="white" weight={3} fillOpacity={1}>
+              <Popup>End: {destination}</Popup>
+            </CircleMarker>
+          )}
 
           {/* Hazard Display */}
           {filteredHazards.map((h, i) => (
@@ -268,7 +284,6 @@ export default function MapAndRoute() {
               color="#FAFAF8"
               weight={1.5}
               fillOpacity={0.8}
-              className={i === 0 ? 'pulse-dot' : ''}
             >
               <Popup>
                 <div style={{ color: 'white' }}>
@@ -292,7 +307,6 @@ export default function MapAndRoute() {
               color="#ED1C24"
               weight={3}
               fillOpacity={1}
-              className="pulse-dot"
             >
               <Popup>
                 <div style={{ color: 'white' }}>

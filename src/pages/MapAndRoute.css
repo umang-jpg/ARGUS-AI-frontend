@@ -1,6 +1,7 @@
 .map-and-route-container {
   display: flex;
-  height: calc(100vh - 64px); /* Subtracting navbar height */
+  height: calc(100vh - 64px);
+  /* Subtracting navbar height */
   width: 100%;
   background: var(--pitch-black);
   overflow: hidden;
@@ -18,7 +19,8 @@
   flex-direction: column;
   gap: 10px;
   z-index: 10;
-  color: var(--floral-white); /* Ensure text is white */
+  color: var(--floral-white);
+  /* Ensure text is white */
 }
 
 .map-area {
@@ -102,7 +104,7 @@
   padding: 6px 8px;
   border-radius: 10px;
   font-size: 0.7rem;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
   color: var(--floral-white);
   cursor: pointer;
@@ -132,24 +134,18 @@
   box-sizing: border-box;
 }
 
-.pulse-dot {
-  animation: pulse-animation 2s infinite;
-}
-
-@keyframes pulse-animation {
-  0% { box-shadow: 0 0 0 0px rgba(237, 28, 36, 0.4); }
-  100% { box-shadow: 0 0 0 15px rgba(237, 28, 36, 0); }
-}
-
 .leaflet-container {
   background: #1a1a1a !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .leaflet-popup-content-wrapper {
   background: #0a0a0a !important;
   color: #ffffff !important;
   border-radius: 12px !important;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .leaflet-popup-tip {
@@ -165,7 +161,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: white; /* Ensure legend text is white */
+  color: white;
+  /* Ensure legend text is white */
 }
 
 .l-item {
