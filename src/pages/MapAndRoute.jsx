@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline } from 'react-leaflet'
 import supabase from '../supabase'
+import Navbar from '../components/Navbar'
 import 'leaflet/dist/leaflet.css'
 import './GlassUI.css'
 import './MapAndRoute.css'
@@ -150,6 +151,7 @@ export default function MapAndRoute() {
 
   return (
     <div className="map-and-route-container">
+      <Navbar />
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-section">

@@ -2,7 +2,8 @@
 
 :root {
   --racing-red: #ed1c24;
-  --imperial-blue: #222225; /* Acting as dark grey accent */
+  --imperial-blue: #222225;
+  /* Acting as dark grey accent */
   --floral-white: #fafaf8;
   --pitch-black: #0a0a0a;
   --glass-bg: rgba(250, 250, 248, 0.08);
@@ -90,12 +91,17 @@
 
 /* Animations */
 @keyframes glass-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
   background-size: 200% 100%;
   animation: glass-shimmer 3s infinite;
 }

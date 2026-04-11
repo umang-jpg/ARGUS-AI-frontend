@@ -1,6 +1,8 @@
 .map-and-route-container {
   display: flex;
   height: calc(100vh - 64px);
+  margin-top: 64px;
+  position: relative;
   /* Subtracting navbar height */
   width: 100%;
   background: var(--pitch-black);
@@ -25,7 +27,7 @@
 
 .map-area {
   flex: 1;
-  height: 100%;
+  height: calc(100% - 0px);
   position: relative;
 }
 

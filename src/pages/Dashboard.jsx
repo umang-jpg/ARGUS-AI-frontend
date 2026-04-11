@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import supabase from '../supabase'
+import Navbar from '../components/Navbar'
 import './GlassUI.css'
 
 const DEVICE_ID = 'argus-device-01'
@@ -12,6 +13,11 @@ export default function Dashboard() {
   const [form, setForm] = useState({ owner_name: '', phone: '', contact1: '', contact2: '', contact3: '', emergency1: '', emergency2: '' })
   const [saved, setSaved] = useState(false)
   const [tab, setTab] = useState('profile')
+  const [reportModal, setReportModal] = useState(null)
+  const [reportLoading, setReportLoading] = useState(null)
+
+  const BACKEND_URL = "https://your-railway-app.up.railway.app"
+  // This will be replaced after Railway deploy — keep as placeholder for now
 
   useEffect(() => {
     async function load() {
@@ -39,6 +45,77 @@ export default function Dashboard() {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  async function generateReport(crash) {
+    setReportLoading(crash.id)
+    try {
+      const crashTime = new Date(crash.created_at)
+      const nearby = hazards.filter(h => {
+        const dist = Math.sqrt(
+          Math.pow(h.lat - crash.lat, 2) + Math.pow(h.lng - crash.lng, 2)
+        )
+        const timeDiff = Math.abs(new Date(h.created_at) - crashTime) / 60000
+        return dist < 0.01 && timeDiff < 10
+      })
+
+      const res = await fetch(`${BACKEND_URL}/api/generate-report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          crash_id: crash.id,
+          lat: crash.lat,
+          lng: crash.lng,
+          sms_sent: crash.sms_sent,
+          created_at: crash.created_at,
+          device_id: crash.device_id,
+          nearby_hazards: nearby,
+        })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setReportModal({ crash, report: data.report })
+      } else {
+        alert("Report generation failed. Check backend.")
+      }
+    } catch (err) {
+      alert("Could not reach backend. Is Railway deployed?")
+      console.error(err)
+    }
+    setReportLoading(null)
+  }
+
+  function downloadReport(reportModal) {
+    const content = `
+ARGUS AI — INCIDENT REPORT
+Generated: ${new Date().toLocaleString()}
+Device: ${reportModal.crash.device_id}
+=============================
+
+POLICE FIR DRAFT
+----------------
+${reportModal.report.fir_draft}
+
+=============================
+
+INSURANCE CLAIM SUMMARY
+------------------------
+${reportModal.report.insurance_summary}
+
+=============================
+
+MEDICAL HANDOFF NOTE
+---------------------
+${reportModal.report.medical_handoff}
+    `.trim()
+
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `argus-incident-${reportModal.crash.id?.slice(0, 8) || 'report'}.txt`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
 
   const topZones = hazards.reduce((acc, h) => {
     const key = `${h.lat.toFixed(3)},${h.lng.toFixed(3)}`
@@ -48,7 +125,8 @@ export default function Dashboard() {
   const sortedZones = Object.entries(topZones).sort((a, b) => b[1] - a[1]).slice(0, 5)
 
   return (
-    <div className="page-bg-overlay">
+    <div className="page-bg-overlay pt-16">
+      <Navbar />
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         <div className="liquid-glass glass-card shimmer" style={{ marginBottom: '30px' }}>
           <h2 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '3px' }}>Rider Dashboard</h2>
@@ -141,18 +219,177 @@ export default function Dashboard() {
           <div className="liquid-glass glass-card">
             <h3 style={{ marginTop: 0 }}>SOS Incident Log</h3>
             {crashes.length === 0
-              ? <p style={{ opacity: 0.5, fontSize: '0.85rem' }}>No critical incidents recorded. Safe travels.</p>
+              ? <p style={{ opacity: 0.5, fontSize: '0.85rem' }}>
+                No critical incidents recorded. Safe travels.
+              </p>
               : crashes.map(c => (
-                <div key={c.id} style={{ padding: '20px', border: '1px solid rgba(237, 28, 36, 0.3)', borderRadius: '15px', marginBottom: '15px', background: 'rgba(237, 28, 36, 0.05)' }}>
-                  <div style={{ color: 'var(--racing-red)', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '10px' }}>🚨 CRITICAL CRASH DETECTED</div>
-                  <div style={{ fontSize: '0.85rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>坐标: <b>{c.lat.toFixed(4)}, {c.lng.toFixed(4)}</b></div>
-                    <div>Dispatch Status: <b style={{ color: c.sms_sent ? '#44ff44' : 'var(--racing-red)' }}>{c.sms_sent ? 'COMPLETED' : 'FAILED'}</b></div>
-                    <div style={{ gridColumn: 'span 2', opacity: 0.6 }}>Timestamp: {new Date(c.created_at).toLocaleString()}</div>
+                <div key={c.id} style={{
+                  padding: '20px',
+                  border: '1px solid rgba(237,28,36,0.3)',
+                  borderRadius: '15px',
+                  marginBottom: '15px',
+                  background: 'rgba(237,28,36,0.05)'
+                }}>
+                  <div style={{
+                    color: 'var(--racing-red)',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    marginBottom: '10px'
+                  }}>
+                    🚨 CRITICAL CRASH DETECTED
                   </div>
+
+                  <div style={{
+                    fontSize: '0.85rem',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '10px'
+                  }}>
+                    <div>Coordinates: <b>{c.lat.toFixed(4)}, {c.lng.toFixed(4)}</b></div>
+                    <div>Dispatch: <b style={{
+                      color: c.sms_sent ? '#44ff44' : 'var(--racing-red)'
+                    }}>{c.sms_sent ? 'COMPLETED' : 'FAILED'}</b></div>
+                    <div style={{ gridColumn: 'span 2', opacity: 0.6 }}>
+                      Timestamp: {new Date(c.created_at).toLocaleString()}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => generateReport(c)}
+                    className="glass-button"
+                    style={{
+                      marginTop: '15px',
+                      fontSize: '0.8rem',
+                      padding: '10px 18px',
+                      opacity: reportLoading === c.id ? 0.6 : 1
+                    }}
+                    disabled={reportLoading === c.id}
+                  >
+                    {reportLoading === c.id
+                      ? '⏳ Generating Report...'
+                      : '📄 Generate Incident Report'}
+                  </button>
                 </div>
               ))
             }
+
+            {/* REPORT MODAL */}
+            {reportModal && (
+              <div style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.88)',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px'
+              }}>
+                <div className="liquid-glass glass-card" style={{
+                  maxWidth: '720px',
+                  width: '100%',
+                  maxHeight: '88vh',
+                  overflowY: 'auto',
+                  position: 'relative'
+                }}>
+
+                  {/* Close button */}
+                  <button
+                    onClick={() => setReportModal(null)}
+                    style={{
+                      position: 'absolute',
+                      top: '15px',
+                      right: '18px',
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--floral-white)',
+                      fontSize: '1.4rem',
+                      cursor: 'pointer',
+                      opacity: 0.7
+                    }}
+                  >✕</button>
+
+                  {/* Modal header */}
+                  <div style={{ marginBottom: '25px' }}>
+                    <h3 style={{
+                      marginTop: 0,
+                      color: 'var(--racing-red)',
+                      letterSpacing: '3px',
+                      textTransform: 'uppercase',
+                      fontSize: '1rem'
+                    }}>
+                      📋 Argus AI — Incident Report
+                    </h3>
+                    <p style={{ opacity: 0.45, fontSize: '0.75rem', margin: 0 }}>
+                      {new Date(reportModal.crash.created_at).toLocaleString()} ·
+                      {reportModal.crash.lat.toFixed(4)}, {reportModal.crash.lng.toFixed(4)}
+                    </p>
+                  </div>
+
+                  {/* Three report sections */}
+                  {[
+                    { key: 'fir_draft', label: '🚔 Police FIR Draft', color: '#ED1C24' },
+                    { key: 'insurance_summary', label: '📋 Insurance Claim Summary', color: '#ffcc44' },
+                    { key: 'medical_handoff', label: '🏥 Medical Handoff Note', color: '#44ddff' },
+                  ].map(({ key, label, color }) => (
+                    <div key={key} style={{
+                      marginBottom: '20px',
+                      padding: '18px',
+                      borderRadius: '12px',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${color}22`
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '12px'
+                      }}>
+                        <b style={{
+                          fontSize: '0.8rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1.5px',
+                          color: color
+                        }}>{label}</b>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(
+                            reportModal.report[key]
+                          )}
+                          className="glass-button"
+                          style={{
+                            padding: '6px 14px',
+                            fontSize: '0.7rem',
+                            background: 'rgba(255,255,255,0.06)'
+                          }}
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <p style={{
+                        fontSize: '0.82rem',
+                        lineHeight: '1.75',
+                        opacity: 0.85,
+                        whiteSpace: 'pre-wrap',
+                        margin: 0,
+                        color: 'var(--floral-white)'
+                      }}>
+                        {reportModal.report[key]}
+                      </p>
+                    </div>
+                  ))}
+
+                  {/* Download button */}
+                  <button
+                    onClick={() => downloadReport(reportModal)}
+                    className="glass-button"
+                    style={{ width: '100%', marginTop: '8px', letterSpacing: '1px' }}
+                  >
+                    ⬇ Download Full Report as .txt
+                  </button>
+
+                </div>
+              </div>
+            )}
           </div>
         )}
 
