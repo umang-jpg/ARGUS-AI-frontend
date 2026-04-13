@@ -631,7 +631,24 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             {/* Testimonial 1 */}
             <div className="bg-white p-10 relative shadow-sm border border-black/5">
-              <span className="material-symbols-outlined text-primary text-7xl absolute top-0 left-8 -translate-y-1/2 bg-white px-2">format_quote</span>
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  fontFamily: 'Material Symbols Outlined',
+                  fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48",
+                  fontSize: '40px',
+                  color: '#ED1C24',
+                  display: 'block',
+                  lineHeight: 1,
+                  userSelect: 'none',
+                  position: 'absolute',
+                  top: 0,
+                  left: '32px',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                format_quote
+              </span>
               <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
                 "I hit a pothole on the expressway at 80kmph last month. Argus buzzed before I even saw it. I don't ride without it anymore."
               </p>
@@ -648,7 +665,24 @@ export default function Home() {
 
             {/* Testimonial 2 */}
             <div className="bg-white p-10 relative shadow-sm border border-black/5">
-              <span className="material-symbols-outlined text-primary text-7xl absolute top-0 left-8 -translate-y-1/2 bg-white px-2">format_quote</span>
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  fontFamily: 'Material Symbols Outlined',
+                  fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48",
+                  fontSize: '40px',
+                  color: '#ED1C24',
+                  display: 'block',
+                  lineHeight: 1,
+                  userSelect: 'none',
+                  position: 'absolute',
+                  top: 0,
+                  left: '32px',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                format_quote
+              </span>
               <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
                 "My son rides 40km to college every day. Knowing Argus will SMS me if something happens gives me actual peace of mind."
               </p>
