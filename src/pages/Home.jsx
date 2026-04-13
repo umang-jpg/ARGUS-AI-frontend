@@ -109,6 +109,14 @@ export default function Home() {
     document.documentElement.classList.add("scroll-smooth");
     document.body.className = "bg-surface text-on-surface font-body overflow-x-hidden";
 
+    if (!document.getElementById('material-symbols-sheet')) {
+      const link = document.createElement('link');
+      link.id = 'material-symbols-sheet';
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap';
+      document.head.appendChild(link);
+    }
+
     if (!document.getElementById('tailwind-script')) {
       const twScript = document.createElement('script');
       twScript.id = 'tailwind-script';
