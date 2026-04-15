@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import PotholeChart from '../components/PotholeChart';
+import { PotholeDonutChart, CrashDeathsChart, DelayedResponseChart } from '../components/PotholeChart';
 import './Home.css';
 
 const IMPACT_STATS = [
-  "1 death every 4.7 hrs",
-  "5 Indians killed daily",
-  "1,856 deaths in 2022"
+  "1,856 lives lost to potholes in 2022.",
+  "1.78 Lakh road fatalities every year across India.",
+  "23,713 deaths due to delayed medical response.",
+  "1 road death occurs every 3 minutes in India."
 ];
 
 const StatCounter = ({ end, duration = 2000, suffix = "", decimals = 0, delay = 0 }) => {
@@ -86,7 +87,7 @@ const ImpactCyclingCard = () => {
           {IMPACT_STATS[index]}
         </div>
         <div className="mt-6 text-[10px] text-neutral-500 uppercase tracking-widest font-bold">
-          Source: Rajya Sabha Q.1871
+          Sources: MoRTH · NITI Aayog · NCRB
         </div>
       </div>
 
@@ -104,18 +105,88 @@ const ImpactCyclingCard = () => {
   );
 };
 
+const EngineeringStagesAccordion = () => {
+  const [active, setActive] = useState(0); // Default to Phase 1 (index 0) to show video immediately
+
+  const phases = [
+    {
+      id: "01",
+      title: "UNDER THE SHELL",
+      tag: "MODEL ANATOMY",
+      desc: "Precision-built hardware, sealed for real-world road conditions.",
+      img: "/WhatsApp Image 2026-04-14 at 8.12.16 PM.jpeg",
+      vid: "/anatomy.mp4"
+    },
+    {
+      id: "02",
+      title: "INTERNAL ARCHITECTURE",
+      tag: "INTERNAL ARCHITECTURE",
+      desc: "Raspberry Pi 4  running YOLOv11 at 15 FPS on-device with 40,715 training images, 86.88% mAP.",
+      img: "/5ec803d5-d45d-431a-8752-eecf9f099700.jpeg",
+    }
+  ];
+
+  return (
+    <div className="flex flex-col md:flex-row gap-4 h-[500px] w-full mt-12 overflow-hidden">
+      {phases.map((p, i) => (
+        <div
+          key={p.id}
+          onMouseEnter={() => setActive(i)}
+          onTouchStart={() => setActive(i)}
+          className={`relative overflow-hidden cursor-pointer transition-all duration-700 ease-in-out rounded-3xl border border-white/10 ${active === i ? "flex-[3.5]" : "flex-1 opacity-60 grayscale hover:grayscale-0 hover:opacity-100"
+            }`}
+        >
+          {/* Background Image Emulator */}
+          <div className="absolute inset-0 z-0">
+            {active === i && p.vid ? (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="w-full h-full object-cover transition-transform duration-1000 scale-110"
+              >
+                <source src={p.vid} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={p.img}
+                className={`w-full h-full object-cover transition-transform duration-1000 ${active === i ? "scale-110" : "scale-100"}`}
+                alt={p.title}
+              />
+            )}
+            <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent transition-opacity duration-500 ${active === i ? "opacity-90" : "opacity-60"}`} />
+          </div>
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+            <div className={`mb-auto transition-transform duration-500 -translate-y-4 ${active === i ? "translate-y-0" : ""}`}>
+              <span className="bg-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-white uppercase">{p.tag}</span>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className={`transition-all duration-500 delay-100 ${active === i ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`}>
+                <h4 className="font-headline font-bold text-2xl lg:text-3xl text-white tracking-tight uppercase leading-none mb-2">{p.title}</h4>
+                <p className="text-neutral-400 text-sm max-w-sm line-clamp-2 md:line-clamp-none">{p.desc}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Vertical Title (when collapsed) */}
+          <div className={`absolute inset-0 z-20 flex items-center justify-center pointer-events-none transition-opacity duration-500 ${active === i ? "opacity-0" : "opacity-100"}`}>
+            <span className="rotate-90 whitespace-nowrap font-headline font-bold text-lg tracking-widest text-white/40 uppercase">STAGE {p.id}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function Home() {
   useEffect(() => {
     document.documentElement.classList.add("scroll-smooth");
     document.body.className = "bg-surface text-on-surface font-body overflow-x-hidden";
-
-    if (!document.getElementById('material-symbols-sheet')) {
-      const link = document.createElement('link');
-      link.id = 'material-symbols-sheet';
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap';
-      document.head.appendChild(link);
-    }
 
     if (!document.getElementById('tailwind-script')) {
       const twScript = document.createElement('script');
@@ -301,19 +372,6 @@ export default function Home() {
   return (
     <>
       <div id="argus-scroll-bar" />
-      <nav className="fixed top-0 w-full z-50 h-16 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-black/5 dark:border-white/5 flex justify-between items-center px-8 mx-auto">
-        <div className="text-xl font-bold tracking-tighter text-black dark:text-white font-headline">
-          ARGUS<span className="text-primary">·</span>AI
-        </div>
-        <div className="hidden md:flex gap-8 font-['Space_Grotesk'] tracking-tighter uppercase text-sm font-bold">
-          <Link className="text-primary border-b-2 border-primary pb-1 transition-all" to="/">Product</Link>
-          <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/map">Map & Routing</Link>
-          <Link className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-200" to="/dashboard">Dashboard</Link>
-        </div>
-        <button className="bg-primary text-white px-5 py-2 font-headline uppercase tracking-tighter text-sm font-bold active:opacity-80 active:scale-95 transition-all">
-          Get Early Access
-        </button>
-      </nav>
       <section className="min-h-screen w-full bg-inverse-surface pt-16 flex flex-col items-center bleed-to-light">
         <div className="w-full h-[512px] md:h-[665px] bg-[#161618] flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#2a2a2d] to-transparent opacity-40 pointer-events-none"></div>
@@ -324,8 +382,9 @@ export default function Home() {
               loop
               muted
               playsInline
-              src="/argus_intro.mp4"
+              preload="auto"
             >
+              <source src="/intro2.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -384,18 +443,16 @@ export default function Home() {
         </div>
       </section>
       <section className="bg-surface py-24 px-8 bleed-to-dark">
-        <div className="max-w-5xl mx-auto flex flex-col gap-16">
+        <div className="max-w-[1700px] mx-auto flex flex-col gap-16">
           <div className="text-center">
-            <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest">THE SCALE OF THE CRISIS</div>
+            <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest uppercase">THE SCALE OF THE CRISIS</div>
             <h2 className="font-headline font-bold text-4xl lg:text-6xl text-on-surface tracking-tighter leading-tight mb-6">
-              1,856 Indians killed by potholes<br />in 2022 , a 26% rise in two years.
+              1.78 Lakh Indian lives lost on roads.<br />Every year. No warning. No system.
             </h2>
-            <p className="text-on-surface-variant text-lg max-w-2xl mx-auto">
-              Government data from Rajya Sabha Q.1871 confirms pothole fatalities are accelerating every year with no sign of reversal.
-            </p>
           </div>
-          <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="flex flex-col gap-4 md:w-1/3">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Column 1: Stacked white cards */}
+            <div className="lg:col-span-3 flex flex-col gap-4">
               {[
                 { num: "1,856", label: "Pothole fatalities in 2022" },
                 { num: "+26%", label: "Rise since 2020" },
@@ -406,12 +463,23 @@ export default function Home() {
                   <div className="text-on-surface-variant text-sm font-bold uppercase tracking-widest">{label}</div>
                 </div>
               ))}
-              <div className="mt-2">
+              <div className="mt-2 text-center md:text-left">
                 <ImpactCyclingCard />
               </div>
             </div>
-            <div className="md:w-2/3">
-              <PotholeChart />
+
+            {/* Main Area: 9-column span */}
+            <div className="lg:col-span-9 flex flex-col gap-8">
+              {/* Row 1: Delayed Response deaths (Full Width) */}
+              <div className="w-full">
+                <DelayedResponseChart />
+              </div>
+
+              {/* Row 2: Two Square Chart Cards below */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <PotholeDonutChart />
+                <CrashDeathsChart />
+              </div>
             </div>
           </div>
         </div>
@@ -419,10 +487,10 @@ export default function Home() {
       <section className="bg-inverse-surface py-20 bleed-to-light">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="border-t-4 border-primary w-16 mb-8"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 w-full divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
+          <div className="grid grid-cols-1 md:grid-cols-3 w-full divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
             {/* Left Card */}
-            <div className="py-20 px-16 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
-              <div className="font-headline font-bold text-8xl lg:text-9xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+            <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
+              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
                 <StatCounter end={1.78} decimals={2} suffix="L" delay={0} />
               </div>
               <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
@@ -432,16 +500,28 @@ export default function Home() {
                 Every year, India loses more lives on roads than most countries lose in armed conflict.
               </p>
             </div>
-            {/* Right Card */}
-            <div className="py-20 px-16 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
-              <div className="font-headline font-bold text-8xl lg:text-9xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+            {/* Middle Card */}
+            <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
+              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
                 <StatCounter end={44} suffix="%" delay={200} />
               </div>
               <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
                 ARE TWO-WHEELER<br />RIDERS
               </div>
               <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
-                Nearly half of every road fatality in India is someone on a bike or scooter with no protection, no warning system, no second chance.
+                Nearly half of every road fatality in India is someone on a bike or scooter with no protection, no warning system.
+              </p>
+            </div>
+            {/* Right Card */}
+            <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
+              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+                <StatCounter end={1} suffix="" delay={400} />
+              </div>
+              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+                DEATH EVERY<br />3 MINUTES
+              </div>
+              <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
+                At the current rate, one Indian is killed on our roads every 180 seconds. A constant, silent surge in fatalities.
               </p>
             </div>
           </div>
@@ -544,68 +624,8 @@ export default function Home() {
             <div className="h-[3px] w-12 bg-primary"></div>
           </div>
 
-          {/* Phases Grid Wrapper */}
-          <div style={{ background: '#0f0f0f', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '28px', padding: '40px', position: 'relative', overflow: 'hidden' }}>
-            {/* Decorative Background Glow */}
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60%', height: '60%', background: 'radial-gradient(circle, rgba(237,28,36,0.04) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
-
-            {/* Phases Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-              {/* Phase 01 */}
-              <div
-                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
-                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
-              >
-                <div className="w-full h-[220px] overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-[1.04]"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
-                    alt="Assembled enclosure"
-                  />
-                </div>
-                <div className="p-6 flex flex-col gap-3">
-                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 1: ASSEMBLED</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>Weatherproof ABS enclosure rated IP65 sealed against dust ingress and water jets, handlebar-mounted in under 5 minutes on any two-wheeler.</p>
-                </div>
-              </div>
-
-              {/* Phase 02 */}
-              <div
-                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
-                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
-              >
-                <div className="w-full h-[220px] overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover grayscale opacity-80 transition-transform duration-400 ease-out group-hover:scale-[1.04]"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
-                    alt="Internal architecture"
-                  />
-                </div>
-                <div className="p-6 flex flex-col gap-3">
-                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 2: INTERNAL ARCHITECTURE</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>Raspberry Pi Zero 2W running YOLOv10n at 8–12 FPS on-device with 40,715 training images, 88.8% mAP, zero cloud dependency.</p>
-                </div>
-              </div>
-
-              {/* Phase 03 */}
-              <div
-                className="group relative flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl border-b-2 border-b-transparent hover:border-b-primary overflow-hidden hover:border-white/20"
-                style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px' }}
-              >
-                <div className="w-full h-[220px] overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-[1.04]"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKSW8lY_0Ap1AjkrGJYvFTGEa45xr-CqAviWPRx2nbF0d_Rq8r_0QByMxQfVWXUN_hrr9Pc69R0HTy4Z-pS7ZwH6ZWOXqurmvalvLDGYbb0ICuB1C6-DSZLnQzwFx-_xE4EBYNbjFD9UCSdchseBXutEiTvOwvCouP4uSEjol40th7ofBOEuAC6rN7QdQrb1Kjr9Cd5DAizZ6VdAaemTDeFqUlRJb99GLdlw1xSYXKTfspbY4B2WCoS6g2cJRzrbeSTlayQ45rd1iF"
-                    alt="System intelligence"
-                  />
-                </div>
-                <div className="p-6 flex flex-col gap-3">
-                  <h4 className="font-headline font-bold text-sm tracking-widest transition-colors duration-200 text-primary group-hover:text-red-500">PHASE 3: SYSTEM INTELLIGENCE</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>MPU6050 6-axis IMU detects crash events and triggers a 30-second dead man countdown auto-dispatching GPS coordinates via SIM800L GSM to emergency contacts.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Expanding Accordion Stages */}
+          <EngineeringStagesAccordion />
         </div>
       </section>
 
@@ -619,16 +639,8 @@ export default function Home() {
                 <span className="text-primary font-headline font-bold text-xl text-right">Quad-core ARM Cortex-A53 · 1GHz</span>
               </div>
               <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">AI Model</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">YOLOv10n · 88.8% mAP · 40,715 training images</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Field of View</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">120° FOV · Pi Camera v2</span>
-              </div>
-              <div className="flex justify-between items-end border-b border-black/5 pb-4">
-                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Detection Range</span>
-                <span className="text-primary font-headline font-bold text-xl text-right">Up to 8 metres · &lt;30ms latency</span>
+                <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Detection Model</span>
+                <span className="text-primary font-headline font-bold text-xl text-right">YOLOv11n · 86.8% mAP · 40,715 training images</span>
               </div>
               <div className="flex justify-between items-end border-b border-black/5 pb-4">
                 <span className="text-on-surface-variant font-bold uppercase text-xs tracking-widest">Total Cost</span>
@@ -639,24 +651,9 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             {/* Testimonial 1 */}
             <div className="bg-white p-10 relative shadow-sm border border-black/5">
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  fontFamily: 'Material Symbols Outlined',
-                  fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48",
-                  fontSize: '40px',
-                  color: '#ED1C24',
-                  display: 'block',
-                  lineHeight: 1,
-                  userSelect: 'none',
-                  position: 'absolute',
-                  top: 0,
-                  left: '32px',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                format_quote
-              </span>
+              <svg className="w-16 h-16 text-primary absolute top-0 left-8 -translate-y-1/2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14.017 21L14.017 18C14.017 16.8954 14.9125 16 16.0171 16H19.0171C20.1217 16 21.0171 16.8954 21.0171 18V21C21.0171 22.1046 20.1217 23 19.0171 23H16.0171C14.9125 23 14.017 22.1046 14.017 21ZM14.017 21C14.017 16.5 16.5 13.5 21.0171 12.5V11C15 12 11 16 11 21H14.017ZM2.01709 21L2.01709 18C2.01709 16.8954 2.91251 16 4.01709 16H7.01709C8.12166 16 9.01709 16.8954 9.01709 18V21C9.01709 22.1046 8.12166 23 7.01709 23H4.01709C2.91251 23 2.01709 22.1046 2.01709 21ZM2.01709 21C2.01709 16.5 4.5 13.5 9.01709 12.5V11C3 12 -1 16 -1 21H2.01709Z" />
+              </svg>
               <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
                 "I hit a pothole on the expressway at 80kmph last month. Argus buzzed before I even saw it. I don't ride without it anymore."
               </p>
@@ -673,24 +670,9 @@ export default function Home() {
 
             {/* Testimonial 2 */}
             <div className="bg-white p-10 relative shadow-sm border border-black/5">
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  fontFamily: 'Material Symbols Outlined',
-                  fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48",
-                  fontSize: '40px',
-                  color: '#ED1C24',
-                  display: 'block',
-                  lineHeight: 1,
-                  userSelect: 'none',
-                  position: 'absolute',
-                  top: 0,
-                  left: '32px',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                format_quote
-              </span>
+              <svg className="w-16 h-16 text-primary absolute top-0 left-8 -translate-y-1/2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14.017 21L14.017 18C14.017 16.8954 14.9125 16 16.0171 16H19.0171C20.1217 16 21.0171 16.8954 21.0171 18V21C21.0171 22.1046 20.1217 23 19.0171 23H16.0171C14.9125 23 14.017 22.1046 14.017 21ZM14.017 21C14.017 16.5 16.5 13.5 21.0171 12.5V11C15 12 11 16 11 21H14.017ZM2.01709 21L2.01709 18C2.01709 16.8954 2.91251 16 4.01709 16H7.01709C8.12166 16 9.01709 16.8954 9.01709 18V21C9.01709 22.1046 8.12166 23 7.01709 23H4.01709C2.91251 23 2.01709 22.1046 2.01709 21ZM2.01709 21C2.01709 16.5 4.5 13.5 9.01709 12.5V11C3 12 -1 16 -1 21H2.01709Z" />
+              </svg>
               <p className="font-headline text-xl font-light italic text-on-surface leading-relaxed mb-12 pt-8">
                 "My son rides 40km to college every day. Knowing Argus will SMS me if something happens gives me actual peace of mind."
               </p>
