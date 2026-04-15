@@ -19,6 +19,39 @@
   flex-direction: column;
   gap: 20px;
   width: 320px;
+  transition: transform 0.4s ease;
+}
+
+.panel-toggle {
+  background: var(--racing-red);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-family: 'Space Grotesk', sans-serif;
+  box-shadow: 0 4px 15px rgba(237, 28, 36, 0.4);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .map-overlay {
+    top: auto;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+    transform: translateY(calc(100% - 60px));
+  }
+
+  .map-overlay.panel-open {
+    transform: translateY(0);
+  }
+  
+  .hazard-map-container {
+    height: 100vh;
+    border-radius: 0;
+  }
 }
 
 .glass-panel {

@@ -127,13 +127,12 @@ const EngineeringStagesAccordion = () => {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 h-[500px] w-full mt-12 overflow-hidden">
+    <div className="flex flex-col md:flex-row gap-4 h-[auto] md:h-[500px] w-full mt-12 overflow-hidden">
       {phases.map((p, i) => (
         <div
           key={p.id}
-          onMouseEnter={() => setActive(i)}
-          onTouchStart={() => setActive(i)}
-          className={`relative overflow-hidden cursor-pointer transition-all duration-700 ease-in-out rounded-3xl border border-white/10 ${active === i ? "flex-[3.5]" : "flex-1 opacity-60 grayscale hover:grayscale-0 hover:opacity-100"
+          onClick={() => setActive(i)}
+          className={`relative overflow-hidden cursor-pointer transition-all duration-700 ease-in-out rounded-3xl border border-white/10 ${active === i ? "min-h-[400px] md:flex-[3.5]" : "min-h-[100px] md:flex-1 opacity-60 md:grayscale md:hover:grayscale-0 md:hover:opacity-100"
             }`}
         >
           {/* Background Image Emulator */}
@@ -160,22 +159,22 @@ const EngineeringStagesAccordion = () => {
           </div>
 
           {/* Content Overlay */}
-          <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+          <div className="absolute inset-0 z-10 p-6 md:p-8 flex flex-col justify-end">
             <div className={`mb-auto transition-transform duration-500 -translate-y-4 ${active === i ? "translate-y-0" : ""}`}>
               <span className="bg-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-white uppercase">{p.tag}</span>
             </div>
 
             <div className="flex items-center gap-6">
               <div className={`transition-all duration-500 delay-100 ${active === i ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`}>
-                <h4 className="font-headline font-bold text-2xl lg:text-3xl text-white tracking-tight uppercase leading-none mb-2">{p.title}</h4>
-                <p className="text-neutral-400 text-sm max-w-sm line-clamp-2 md:line-clamp-none">{p.desc}</p>
+                <h4 className="font-headline font-bold text-xl md:text-2xl lg:text-3xl text-white tracking-tight uppercase leading-none mb-2">{p.title}</h4>
+                <p className="text-neutral-400 text-xs md:text-sm max-w-sm line-clamp-2 md:line-clamp-none">{p.desc}</p>
               </div>
             </div>
           </div>
 
           {/* Vertical Title (when collapsed) */}
           <div className={`absolute inset-0 z-20 flex items-center justify-center pointer-events-none transition-opacity duration-500 ${active === i ? "opacity-0" : "opacity-100"}`}>
-            <span className="rotate-90 whitespace-nowrap font-headline font-bold text-lg tracking-widest text-white/40 uppercase">STAGE {p.id}</span>
+            <span className="md:rotate-90 whitespace-nowrap font-headline font-bold text-base md:text-lg tracking-widest text-white/40 uppercase">STAGE {p.id}</span>
           </div>
         </div>
       ))}
@@ -395,7 +394,7 @@ export default function Home() {
             <span className="text-[11px] font-label font-bold tracking-[3px] text-primary uppercase">ROAD SAFETY · REIMAGINED</span>
             <div className="h-[2px] w-8 bg-primary"></div>
           </div>
-          <h1 className="font-headline font-bold text-5xl lg:text-8xl text-inverse-on-surface leading-[1.1] tracking-[-0.02em] mb-8">
+          <h1 className="font-headline font-bold text-4xl sm:text-5xl lg:text-8xl text-inverse-on-surface leading-[1.1] tracking-[-0.02em] mb-8 px-4">
             See Every Road.<br /><span className="text-primary">Safe.</span>
           </h1>
           <p className="text-on-surface-variant text-base md:text-lg max-w-2xl mb-12 leading-relaxed">
@@ -446,7 +445,7 @@ export default function Home() {
         <div className="max-w-[1700px] mx-auto flex flex-col gap-16">
           <div className="text-center">
             <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest uppercase">THE SCALE OF THE CRISIS</div>
-            <h2 className="font-headline font-bold text-4xl lg:text-6xl text-on-surface tracking-tighter leading-tight mb-6">
+            <h2 className="font-headline font-bold text-3xl sm:text-4xl lg:text-6xl text-on-surface tracking-tighter leading-tight mb-6 px-4">
               1.78 Lakh Indian lives lost on roads.<br />Every year. No warning. No system.
             </h2>
           </div>
@@ -490,10 +489,10 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 w-full divide-y md:divide-y-0 md:divide-x divide-white/10 border-y border-white/10">
             {/* Left Card */}
             <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
-              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+              <div className="font-headline font-bold text-5xl sm:text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
                 <StatCounter end={1.78} decimals={2} suffix="L" delay={0} />
               </div>
-              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+              <div className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
                 ROAD DEATHS<br />PER YEAR IN INDIA
               </div>
               <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
@@ -502,10 +501,10 @@ export default function Home() {
             </div>
             {/* Middle Card */}
             <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
-              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+              <div className="font-headline font-bold text-5xl sm:text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
                 <StatCounter end={44} suffix="%" delay={200} />
               </div>
-              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+              <div className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
                 ARE TWO-WHEELER<br />RIDERS
               </div>
               <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
@@ -514,10 +513,10 @@ export default function Home() {
             </div>
             {/* Right Card */}
             <div className="py-20 px-8 flex flex-col justify-center transition-colors duration-300 hover:bg-white/5 group">
-              <div className="font-headline font-bold text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
+              <div className="font-headline font-bold text-5xl sm:text-7xl lg:text-8xl text-primary tracking-tighter transition-colors duration-300 group-hover:text-red-400">
                 <StatCounter end={1} suffix="" delay={400} />
               </div>
-              <div className="text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
+              <div className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-neutral-500 mt-4 leading-loose">
                 DEATH EVERY<br />3 MINUTES
               </div>
               <p className="text-neutral-400 text-sm mt-6 max-w-xs leading-relaxed">
@@ -532,7 +531,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <div className="w-full text-center md:text-left mb-4">
             <div className="text-primary font-headline font-bold text-sm mb-4 tracking-widest uppercase">Core Capabilities</div>
-            <h2 className="font-headline font-bold text-5xl lg:text-6xl text-on-surface tracking-tighter leading-none mb-4">Features of Argus.Ai</h2>
+            <h2 className="font-headline font-bold text-4xl sm:text-5xl lg:text-6xl text-on-surface tracking-tighter leading-none mb-4">Features of Argus.Ai</h2>
             <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl">
               Advanced computer vision and edge processing designed to prevent accidents before they happen.
             </p>
@@ -542,7 +541,7 @@ export default function Home() {
             <div className="md:col-span-2 group relative bg-[#111111] rounded-2xl p-8 overflow-hidden border border-white/5 h-[240px] transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-2xl hover:border-white/20 feature-reveal">
               <div className="relative z-10">
                 <div className="text-primary font-bold text-xs tracking-[0.2em] uppercase mb-2 opacity-80">Priority Safety</div>
-                <h4 className="font-headline font-bold text-2xl md:text-3xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Auto SOS Dispatch</h4>
+                <h4 className="font-headline font-bold text-xl md:text-2xl md:text-3xl tracking-tight text-white transition-colors duration-200 group-hover:text-primary">Auto SOS Dispatch</h4>
                 <p className="text-sm text-neutral-400 mt-2 max-w-sm leading-relaxed">
                   Instant crash detection notifies emergency services with precise GPS coordinates and vitals via SIM800L GSM.
                 </p>
@@ -712,8 +711,8 @@ export default function Home() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 <tr className="group" data-perf-row="amd">
-                  <td className="py-10 text-primary font-bold text-3xl tracking-tighter">AMD Radeon 780M</td>
-                  <td className="py-10 text-primary font-bold text-3xl tracking-tighter text-right"><span data-fps-count="264">264</span> FPS</td>
+                  <td className="py-6 md:py-10 text-primary font-bold text-xl md:text-3xl tracking-tighter">AMD Radeon 780M</td>
+                  <td className="py-6 md:py-10 text-primary font-bold text-xl md:text-3xl tracking-tighter text-right"><span data-fps-count="264">264</span> FPS</td>
                 </tr>
                 <tr aria-hidden="true" style={{ borderTop: 'none' }}>
                   <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
@@ -727,8 +726,8 @@ export default function Home() {
                   </td>
                 </tr>
                 <tr className="group opacity-50" data-perf-row="nvidia">
-                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter">NVIDIA RTX 3050 (Mobile)</td>
-                  <td className="py-10 text-inverse-on-surface font-bold text-3xl tracking-tighter text-right"><span data-fps-count="212">212</span> FPS</td>
+                   <td className="py-6 md:py-10 text-inverse-on-surface font-bold text-xl md:text-3xl tracking-tighter">NVIDIA RTX 3050 (Mobile)</td>
+                  <td className="py-6 md:py-10 text-inverse-on-surface font-bold text-xl md:text-3xl tracking-tighter text-right"><span data-fps-count="212">212</span> FPS</td>
                 </tr>
                 <tr aria-hidden="true" style={{ borderTop: 'none' }}>
                   <td colSpan={2} style={{ paddingTop: 0, paddingBottom: '8px' }}>
@@ -778,7 +777,7 @@ export default function Home() {
       </section>
 
       <section className="bg-primary py-32 px-8 flex flex-col items-center text-center bleed-to-footer">
-        <h2 className="font-headline font-bold text-5xl lg:text-7xl text-inverse-on-surface tracking-tighter mb-12">
+        <h2 className="font-headline font-bold text-4xl sm:text-5xl lg:text-7xl text-inverse-on-surface tracking-tighter mb-12">
           Ready to ride safer?
         </h2>
         <button className="bg-white text-primary px-16 py-6 font-headline font-bold uppercase tracking-widest text-xl hover:bg-inverse-surface hover:text-white transition-all">

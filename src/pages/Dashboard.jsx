@@ -125,18 +125,18 @@ ${reportModal.report.medical_handoff}
   const sortedZones = Object.entries(topZones).sort((a, b) => b[1] - a[1]).slice(0, 5)
 
   return (
-    <div className="page-bg-overlay pt-16">
+    <div className="page-bg-overlay pt-24 px-4 md:px-8">
       <Navbar />
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <div className="liquid-glass glass-card shimmer" style={{ marginBottom: '30px' }}>
-          <h2 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '3px' }}>Rider Dashboard</h2>
-          <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '5px' }}>Device ID: <span style={{ color: 'var(--racing-red)', fontWeight: 'bold' }}>{DEVICE_ID}</span></p>
+      <div className="max-w-5xl mx-auto">
+        <div className="liquid-glass glass-card shimmer mb-8">
+          <h2 className="text-xl md:text-2xl font-headline font-bold uppercase tracking-[2px] md:tracking-[3px] m-0">Rider Dashboard</h2>
+          <p className="opacity-60 text-[0.7rem] md:text-0.8rem mt-1">Device ID: <span className="text-primary font-bold">{DEVICE_ID}</span></p>
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '25px', flexWrap: 'wrap' }}>
+          <div className="flex flex-wrap gap-2 md:gap-3 mt-6">
             {['profile', 'hazards', 'crashes', 'rides'].map(t => (
               <button key={t} onClick={() => setTab(t)}
-                className={`glass-button ${tab === t ? 'active' : ''}`}
-                style={{ background: tab === t ? 'var(--imperial-blue)' : 'rgba(250,250,248,0.05)', flex: 1, minWidth: '100px' }}>
+                className={`glass-button text-xs md:text-sm py-2 md:py-3 px-4 md:px-6 flex-1 min-w-[120px] ${tab === t ? 'active' : ''}`}
+                style={{ background: tab === t ? 'var(--imperial-blue)' : 'rgba(250,250,248,0.05)' }}>
                 {t.charAt(0).toUpperCase() + t.slice(1)}
               </button>
             ))}
@@ -177,16 +177,16 @@ ${reportModal.report.medical_handoff}
 
         {tab === 'hazards' && (
           <div className="liquid-glass glass-card">
-            <h3 style={{ marginTop: 0 }}>Hazard Telemetry</h3>
-            <div style={{ display: 'flex', gap: '15px', marginBottom: '30px' }}>
+            <h3 className="text-lg md:text-xl font-headline mt-0">Hazard Telemetry</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
               {[
                 { label: 'Potholes', count: hazards.filter(h => h.hazard_class === 'pothole').length, color: 'var(--racing-red)' },
                 { label: 'Pedestrians', count: hazards.filter(h => h.hazard_class === 'pedestrian').length, color: '#FAFAF8' },
                 { label: 'Obstacles', count: hazards.filter(h => h.hazard_class === 'obstacle').length, color: '#888888' },
               ].map(({ label, count, color }) => (
-                <div key={label} style={{ flex: 1, padding: '20px', background: 'rgba(250,250,248,0.03)', borderRadius: '15px', textAlign: 'center', border: '1px solid rgba(250,250,248,0.05)' }}>
-                  <div style={{ fontSize: '2rem', fontWeight: '800', color: color }}>{count}</div>
-                  <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.6 }}>{label}</div>
+                <div key={label} className="p-5 bg-floral-white/5 rounded-2xl text-center border border-floral-white/5">
+                  <div className="text-3xl md:text-4xl font-bold" style={{ color: color }}>{count}</div>
+                  <div className="text-[0.6rem] md:text-[0.7rem] uppercase tracking-wider opacity-60 mt-1">{label}</div>
                 </div>
               ))}
             </div>
@@ -239,17 +239,12 @@ ${reportModal.report.medical_handoff}
                     🚨 CRITICAL CRASH DETECTED
                   </div>
 
-                  <div style={{
-                    fontSize: '0.85rem',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '10px'
-                  }}>
-                    <div>Coordinates: <b>{c.lat.toFixed(4)}, {c.lng.toFixed(4)}</b></div>
-                    <div>Dispatch: <b style={{
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div>Coordinates: <b className="block sm:inline">{c.lat.toFixed(4)}, {c.lng.toFixed(4)}</b></div>
+                    <div className="sm:text-right">Dispatch: <b style={{
                       color: c.sms_sent ? '#44ff44' : 'var(--racing-red)'
                     }}>{c.sms_sent ? 'COMPLETED' : 'FAILED'}</b></div>
-                    <div style={{ gridColumn: 'span 2', opacity: 0.6 }}>
+                    <div className="sm:col-span-2 opacity-60 text-xs mt-1">
                       Timestamp: {new Date(c.created_at).toLocaleString()}
                     </div>
                   </div>

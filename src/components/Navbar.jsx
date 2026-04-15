@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const location = useLocation();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!document.getElementById('tailwind-script')) {
@@ -93,33 +95,87 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 w-full z-50 h-16 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-black/5 dark:border-white/5 flex justify-between items-center px-8 mx-auto">
-      <div className="text-xl font-bold tracking-tighter text-black dark:text-white font-headline">
-        ARGUS<span className="text-primary">·</span>AI
+    <>
+      <nav className="fixed top-0 w-full z-[100] h-16 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-black/5 dark:border-white/5 flex justify-between items-center px-6 md:px-12">
+        <div className="text-xl font-bold tracking-tighter text-black dark:text-white font-headline">
+          ARGUS<span className="text-primary">·</span>AI
+        </div>
+        
+        {/* Desktop Links */}
+        <div className="hidden md:flex gap-8 font-['Space_Grotesk'] tracking-tighter uppercase text-sm font-bold">
+          <Link 
+            className={`${isActive('/') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
+            to="/"
+          >
+            Product
+          </Link>
+          <Link 
+            className={`${isActive('/map') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
+            to="/map"
+          >
+            Map & Routing
+          </Link>
+          <Link 
+            className={`${isActive('/dashboard') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
+            to="/dashboard"
+          >
+            Dashboard
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button className="hidden sm:block bg-primary text-white px-5 py-2 font-headline uppercase tracking-tighter text-sm font-bold active:opacity-80 active:scale-95 transition-all">
+            Get Early Access
+          </button>
+          
+          {/* Mobile Menu Toggle */}
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-black dark:text-white p-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 z-[90] bg-white dark:bg-black transition-transform duration-300 md:hidden ${isOpen ? 'translate-y-0' : '-translate-y-full'}`}
+        style={{ paddingTop: '64px' }}
+      >
+        <div className="flex flex-col items-center gap-8 p-12 font-headline tracking-tighter uppercase text-2xl font-bold">
+          <Link 
+            onClick={() => setIsOpen(false)}
+            className={`${isActive('/') ? 'text-primary' : 'text-neutral-500'}`} 
+            to="/"
+          >
+            Product
+          </Link>
+          <Link 
+            onClick={() => setIsOpen(false)}
+            className={`${isActive('/map') ? 'text-primary' : 'text-neutral-500'}`} 
+            to="/map"
+          >
+            Map & Routing
+          </Link>
+          <Link 
+            onClick={() => setIsOpen(false)}
+            className={`${isActive('/dashboard') ? 'text-primary' : 'text-neutral-500'}`} 
+            to="/dashboard"
+          >
+            Dashboard
+          </Link>
+          <button className="mt-4 bg-primary text-white w-full py-4 font-headline uppercase tracking-tighter text-lg font-bold">
+            Get Early Access
+          </button>
+        </div>
       </div>
-      <div className="hidden md:flex gap-8 font-['Space_Grotesk'] tracking-tighter uppercase text-sm font-bold">
-        <Link 
-          className={`${isActive('/') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
-          to="/"
-        >
-          Product
-        </Link>
-        <Link 
-          className={`${isActive('/map') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
-          to="/map"
-        >
-          Map & Routing
-        </Link>
-        <Link 
-          className={`${isActive('/dashboard') ? 'text-primary border-b-2 border-primary pb-1' : 'text-neutral-500 hover:text-black dark:hover:text-white'} transition-all`} 
-          to="/dashboard"
-        >
-          Dashboard
-        </Link>
-      </div>
-      <button className="bg-primary text-white px-5 py-2 font-headline uppercase tracking-tighter text-sm font-bold active:opacity-80 active:scale-95 transition-all">
-        Get Early Access
-      </button>
-    </nav>
+    </>
   );
 }

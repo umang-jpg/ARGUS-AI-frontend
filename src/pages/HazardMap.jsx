@@ -14,6 +14,7 @@ export default function HazardMap() {
   const [hazards, setHazards] = useState([])
   const [crashes, setCrashes] = useState([])
   const [filter, setFilter] = useState('all')
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -32,10 +33,16 @@ export default function HazardMap() {
   return (
     <div className="hazard-map-container">
       {/* Glassmorphic Control Panel */}
-      <div className="map-overlay">
+      <div className={`map-overlay ${isPanelOpen ? 'panel-open' : ''}`}>
+        <button 
+          className="panel-toggle md:hidden"
+          onClick={() => setIsPanelOpen(!isPanelOpen)}
+        >
+          {isPanelOpen ? '✕ Hide Controls' : '☰ Show Controls'}
+        </button>
         <div className="glass-panel shimmer">
-          <h2 style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '1.2rem', marginBottom: '10px' }}>ArgusAI Intelligence</h2>
-          <p style={{ opacity: 0.7, lineHeight: '1.4', marginBottom: '20px', color: 'var(--floral-white)' }}>Live telemetry and multi-agent hazard detection stream.</p>
+          <h2 className="text-lg md:text-xl font-headline font-bold uppercase tracking-[2px] mb-2">ArgusAI Intelligence</h2>
+          <p className="opacity-70 text-xs md:text-sm leading-relaxed mb-5 text-floral-white">Live telemetry and multi-agent hazard detection stream.</p>
 
           <div className="stats-grid">
             <div className="stat-card">
@@ -44,11 +51,11 @@ export default function HazardMap() {
             </div>
             <div className="stat-card">
               <span className="stat-label">Active SOS</span>
-              <span className="stat-value" style={{ color: 'var(--racing-red)' }}>{crashes.length}</span>
+              <span className="stat-value text-primary">{crashes.length}</span>
             </div>
           </div>
 
-          <div className="filter-group" style={{ marginTop: '25px' }}>
+          <div className="filter-group mt-6">
             {['all', 'pothole', 'pedestrian', 'obstacle'].map(f => (
               <button
                 key={f}
@@ -63,7 +70,7 @@ export default function HazardMap() {
       </div>
 
       {/* Legend Panel */}
-      <div className="legend-panel glass-panel" style={{ padding: '12px 18px', bottom: '20px', right: '20px', width: 'auto' }}>
+      <div className="legend-panel glass-panel hidden md:block">
         <div className="legend-item">
           <div className="dot" style={{ backgroundColor: COLORS.pothole }}></div>
           <span>Pothole</span>

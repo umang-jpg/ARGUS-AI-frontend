@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet'
 import supabase from '../supabase'
+import Navbar from '../components/Navbar'
 import 'leaflet/dist/leaflet.css'
 import './GlassUI.css'
 
@@ -68,9 +69,10 @@ export default function SafeRoute() {
   const center      = fromPt ? [fromPt.lat, fromPt.lng] : [19.076, 72.877]
 
   return (
-    <div className="page-bg-overlay">
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <div className="liquid-glass glass-card shimmer" style={{ marginBottom: '30px' }}>
+    <div className="page-bg-overlay pt-24 px-4 md:px-8">
+      <Navbar />
+      <div className="max-w-5xl mx-auto">
+        <div className="liquid-glass glass-card shimmer mb-8">
           <h2 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '3px' }}>SafeRoute AI</h2>
           <p style={{ opacity: 0.6, fontSize: '0.85rem', marginTop: '5px' }}>Neural routing powered by crowd-sourced hazard telemetry.</p>
 
@@ -104,21 +106,21 @@ export default function SafeRoute() {
 
 
         {score !== null && (
-          <div className="liquid-glass glass-card" style={{ marginBottom: '30px', borderLeft: `6px solid ${routeColor}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="liquid-glass glass-card border-l-[6px] mb-8" style={{ borderLeftColor: routeColor }}>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', opacity: 0.6, letterSpacing: '1px' }}>Safety Assessment</div>
-                <b style={{ fontSize: '1.4rem' }}>DANGER SCORE: {score}/100</b>
+                <div className="text-[0.7rem] uppercase opacity-60 tracking-wider">Safety Assessment</div>
+                <b className="text-xl md:text-2xl font-headline">DANGER SCORE: {score}/100</b>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <b style={{ color: routeColor, fontSize: '1.1rem', textTransform: 'uppercase' }}>{safetyLabel}</b>
-                <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>Based on live device detections</div>
+              <div className="sm:text-right">
+                <b className="text-lg md:text-xl block mb-1" style={{ color: routeColor }}>{safetyLabel}</b>
+                <div className="text-[0.7rem] opacity-60">Based on live device detections</div>
               </div>
             </div>
           </div>
         )}
 
-        <div className="liquid-glass" style={{ height: '550px', width: '100%', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+        <div className="liquid-glass rounded-[20px] overflow-hidden border border-floral-white/10" style={{ height: '550px', width: '100%' }}>
           <MapContainer center={center} zoom={10} style={{ height: '100%', width: '100%' }}>
             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
             {route   && <Polyline positions={route} color={routeColor} weight={6} opacity={0.9} />}

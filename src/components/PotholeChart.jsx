@@ -97,8 +97,8 @@ export function PotholeDonutChart() {
   });
 
   return (
-    <div ref={containerRef} style={{
-      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px", padding: "40px",
+    <div ref={containerRef} className="stat-chart-card" style={{
+      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px",
       color: "#FFFCF2", position: "relative", overflow: "hidden", border: "1px solid rgba(237,75,30,0.15)", width: "100%"
     }}>
       <div style={{ position: "absolute", top: "-80px", left: "-80px", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(237,75,30,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -208,8 +208,8 @@ export function CrashDeathsChart() {
   });
 
   return (
-    <div ref={containerRef} style={{
-      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px", padding: "40px",
+    <div ref={containerRef} className="stat-chart-card" style={{
+      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px",
       color: "#FFFCF2", position: "relative", overflow: "hidden", border: "1px solid rgba(237,75,30,0.15)", width: "100%"
     }}>
       <div style={{ position: "absolute", top: "-80px", right: "-80px", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(237,75,30,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -303,8 +303,8 @@ export function DelayedResponseChart() {
   const maxVal = 4821;
 
   return (
-    <div ref={containerRef} style={{
-      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px", padding: "40px",
+    <div ref={containerRef} className="stat-chart-card" style={{
+      fontFamily: "'Syne', 'Space Grotesk', sans-serif", background: "#0A0A0A", borderRadius: "24px",
       color: "#FFFCF2", position: "relative", overflow: "hidden", border: "1px solid rgba(237,75,30,0.15)", width: "100%"
     }}>
       <div style={{ position: "absolute", top: "-80px", left: "-80px", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(237,75,30,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -351,8 +351,13 @@ export function DelayedResponseChart() {
 
 export default function PotholeChart() {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }} className="pothole-grid">
-      <style>{`@media(max-width:1024px){.pothole-grid{grid-template-columns:1fr !important;}}`}</style>
+    <div className="pothole-grid">
+      <style>{`
+        .pothole-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .stat-chart-card { padding: 40px; }
+        @media(max-width:1024px) { .pothole-grid { grid-template-columns: 1fr !important; } }
+        @media(max-width:640px) { .stat-chart-card { padding: 20px; } }
+      `}</style>
       <PotholeDonutChart />
       <CrashDeathsChart />
     </div>

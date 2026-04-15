@@ -59,6 +59,7 @@ export default function MapAndRoute() {
   const [hazards, setHazards] = useState([])
   const [crashes, setCrashes] = useState([])
   const [hFilter, setHFilter] = useState('all')
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // Route States
   const [origin, setOrigin] = useState('')
@@ -150,8 +151,17 @@ export default function MapAndRoute() {
   const filteredHazards = hFilter === 'all' ? hazards : hazards.filter(h => h.hazard_class === hFilter)
 
   return (
-    <div className="map-and-route-container">
+    <div className={`map-and-route-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <Navbar />
+      
+      {/* Mobile Sidebar Toggle */}
+      <button 
+        className="sidebar-toggle md:hidden"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? '✕ Hide Controls' : '☰ Plan Route'}
+      </button>
+
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-section">
